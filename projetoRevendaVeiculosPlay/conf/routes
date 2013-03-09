@@ -1,0 +1,15 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+
+# Fabricantes
+POST	/fabricante					controllers.Fabricantes.salvar()
+GET		/fabricante					controllers.Fabricantes.listar()
+GET		/fabricante/:cod/editar		controllers.Fabricantes.editar(cod: Int)
+POST	/fabricante/:cod			controllers.Fabricantes.remover(cod: Int)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

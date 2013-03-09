@@ -1,0 +1,43 @@
+@(fabricantes: List[Fabricante], inserirForm: Form[Fabricante], emEdicao: Fabricante)
+
+@import helper._
+
+@main("Fabricantes") {
+    
+    <h1>Fabricantes Cadastrados</h1>
+    
+    <table border="1">
+        @for(f <- fabricantes) {
+        <tr>
+            <td>
+                @f.descricao
+            </td>
+            <td>
+            	<form action="@{routes.Fabricantes.editar(f.id)}" method="GET">
+				    <input type="submit" value="Editar" />
+				</form> 
+            </td>
+            <td>    
+                @form(routes.Fabricantes.remover(f.id)) {
+                    <input type="submit" value="Excluir">
+                }
+            </td>
+        </tr>
+        }
+    </table>
+    
+    <h2>
+      @if(emEdicao == null){
+      	Novo Fabricante
+      }else{
+        Editar Fabricante
+      }
+    </h2>
+    
+    @form(routes.Fabricantes.salvar()) {
+   		@inputText(inserirForm("descricao"), '_label -> "Descrição")
+   		<input type="hidden" name="id" value="@inserirForm("id").value">
+   		<input type="submit" value="Salvar">
+    }
+    
+}
