@@ -4,41 +4,111 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
+import models.Modelo;
 import models.Veiculo;
 import play.db.DB;
 
 public class DAOVeiculo implements DAO<Veiculo> {
-
+	
 	@Override
-	public Integer inserir(Veiculo f) {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer inserir(Veiculo v) {
+		try{
+			Connection con = DB.getConnection();
+			PreparedStatement prep = con.prepareStatement("insert into veiculos (anofabricacao, placa, cilindradas, idmodelo, chassi) " +
+					"values (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			prep.setInt(1, v.anoFabricacao);
+			prep.setString(2, v.placa);
+			prep.setInt(3, v.cilindradas);
+			prep.setInt(4, v.modelo.id);
+			prep.setString(5, v.chassi);
+			prep.executeUpdate();
+			//obtém id gerado pelo banco
+			ResultSet rs = prep.getGeneratedKeys();
+			rs.next();
+			Integer id = rs.getInt(1);
+			rs.close();
+			
+			return id;
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override
-	public void atualizar(Veiculo f) {
-		// TODO Auto-generated method stub
-		
+	public void atualizar(Veiculo v) {
+		try{
+			Connection con = DB.getConnection();
+			PreparedStatement prep = con.prepareStatement("update veiculos set anofabricacao=?, placa=?, cilindradas=?, idmodelo=?, chassi=? where id=?");
+			prep.setInt(1, v.anoFabricacao);
+			prep.setString(2, v.placa);
+			prep.setInt(3, v.cilindradas);
+			prep.setInt(4, v.modelo.id);
+			prep.setString(5, v.chassi);
+			prep.setInt(6, v.id);
+			prep.executeUpdate();
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override
 	public void excluir(Integer id) {
-		// TODO Auto-generated method stub
-		
+		try{
+			Connection con = DB.getConnection();
+			PreparedStatement prep = con.prepareStatement("delete from veiculos where id=?");
+			prep.setInt(1, id);
+			prep.executeUpdate();
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override
 	public List<Veiculo> todos() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Veiculo> veiculos = new ArrayList<Veiculo>();
+		try{
+			Connection con = DB.getConnection();
+			PreparedStatement prep = con.prepareStatement("select v.id as id, anofabricacao, chassi, placa, foto, cilindradas, " +
+					"m.descricao as desc, m.id as idmodelo  " +
+					"from veiculos v inner join modelos m on v.idmodelo = m.id ");
+			ResultSet rs = prep.executeQuery();
+			while(rs.next()){
+				Veiculo v = montarVeiculo(rs);
+				veiculos.add(v);
+			}
+			return veiculos;
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override
 	public Veiculo getPorId(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+			Connection con = DB.getConnection();
+			PreparedStatement prep = con.prepareStatement("select v.id as id, anofabricacao, chassi, placa, foto, cilindradas, " +
+					"m.descricao as desc, m.id as idmodelo " +
+					"from veiculos v inner join modelos m on v.idmodelo = m.id where v.id=?");
+			prep.setInt(1, id);
+			ResultSet rs = prep.executeQuery();
+			if(rs.next()){
+				return montarVeiculo(rs);
+			}
+			else{ //não há veículo com o id informado
+				return null;
+			}
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
 	}
 	
 	/**
@@ -80,6 +150,11 @@ public class DAOVeiculo implements DAO<Veiculo> {
 			v.cilindradas = rs.getInt("cilindradas");
 			v.foto = rs.getBytes("foto");
 			v.placa = rs.getString("placa");
+			
+			Modelo modelo = new Modelo();
+			modelo.id = rs.getInt("idmodelo");
+			modelo.descricao = rs.getString("desc");
+			v.modelo = modelo;
 			
 			return v;
 		}catch(SQLException ex){

@@ -1,0 +1,71 @@
+@(veiculos: List[Veiculo], inserirForm: Form[Veiculo], emEdicao: Veiculo, modelos: List[Modelo])
+
+@import helper._
+
+@main("Veículos") {
+    
+    <h1>Veículos Cadastrados</h1>
+    
+    <table border="1">
+    	<tr>
+    		<td>Ano</td>
+    		<td>Placa</td>
+    		<td>Modelo</td>
+    		<td>Cilindradas</td>
+    		<td>Chassi</td>
+    	</tr>
+        @for(v <- veiculos) {
+        <tr>
+            <td>
+                @v.anoFabricacao
+            </td>
+            <td>
+                @v.placa
+            </td>
+            <td>
+                @v.modelo.descricao
+            </td>
+            <td>
+                @v.cilindradas
+            </td>
+            <td>
+                @v.chassi
+            </td>
+            <td>
+            	<form action="@{routes.Veiculos.editar(v.id)}" method="GET">
+				    <input type="submit" value="Editar" />
+				</form> 
+            </td>
+            <td>    
+                @form(routes.Veiculos.remover(v.id)) {
+                    <input type="submit" value="Excluir">
+                }
+            </td>
+        </tr>
+        }
+    </table>
+    
+    <h2>
+      @if(emEdicao == null){
+      	Novo Veículo
+      }else{
+        Editar Veículo
+      }
+    </h2>
+    
+    @form(routes.Veiculos.salvar()) {
+   		@inputText(inserirForm("anoFabricacao"), '_label -> "Ano")
+   		@inputText(inserirForm("placa"), '_label -> "Placa")
+   		@inputText(inserirForm("cilindradas"), '_label -> "Cilindradas")
+   		@inputText(inserirForm("chassi"), '_label -> "Chassi")
+   		Modelo
+   		<select name="modelo.id">
+   			@for(m <- modelos){
+   				<option @if(emEdicao != null && m.id == emEdicao.modelo.id){selected="selected"} value="@m.id">@m.descricao</option>
+   			}
+   		</select>
+   		<input type="hidden" name="id" value="@inserirForm("id").value">
+   		<input type="submit" value="Salvar">
+    }
+    
+}
