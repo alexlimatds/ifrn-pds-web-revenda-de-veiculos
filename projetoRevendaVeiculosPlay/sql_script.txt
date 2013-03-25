@@ -47,8 +47,8 @@ insert into status_venda (id, descricao) values (1, 'AGUARDANDO AUTORIZAÇÃO');
 insert into status_venda (id, descricao) values (2, 'AUTORIZADA');
 insert into status_venda (id, descricao) values (3, 'FINALIZADA');
 
-create table vendas (id int identity, data date not null, desconto decimal(15, 2) not null, comissao decimal(5, 2) not null, obs varchar(300), idstatus int not null, idveiculo int not null, idvendedor int not null, idautorizador int, foreign key (idstatus) references status_venda, foreign key (idveiculo) references veiculos, foreign key (idvendedor) references usuarios, foreign key (idautorizador) references usuarios);
+create table vendas (id int identity, data timestamp not null, desconto decimal(15, 2) not null, comissao decimal(5, 2) not null, obs varchar(300), idstatus int not null, idveiculo int not null, idvendedor int not null, idautorizador int, foreign key (idstatus) references status_venda, foreign key (idveiculo) references veiculos, foreign key (idvendedor) references usuarios, foreign key (idautorizador) references usuarios);
 
-create table compras (id int identity, data date not null, preco decimal(15, 2), obs varchar(300), idveiculo int not null, foreign key (idveiculo) references veiculos);
+create table compras (id int identity, data timestamp not null, preco decimal(15, 2), obs varchar(300), idveiculo int not null, foreign key (idveiculo) references veiculos);
 
 create table partes_pagamento (id int identity, quantia decimal(15,2) not null, idformapagamento int not null, idvenda int not null, idcompra int, foreign key (idformapagamento) references formas_pagamento, foreign key (idvenda) references vendas, foreign key (idcompra) references compras);

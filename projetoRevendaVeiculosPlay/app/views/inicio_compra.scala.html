@@ -1,0 +1,14 @@
+@(placaForm: Form[Veiculo])
+
+@import helper._
+
+@main("Compra - início") {
+    
+    <h1>Compra - seleção de veículo</h1>
+    
+    @form(routes.Compras.selecionarVeiculo()) {
+   		@inputText(placaForm("placa"), '_label -> "Placa do veículo")
+   		<input type="submit" value="Avançar">
+    }
+    
+}

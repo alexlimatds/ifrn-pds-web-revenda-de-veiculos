@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import models.Modelo;
@@ -121,13 +122,39 @@ public class DAOVeiculo implements DAO<Veiculo> {
 	public Veiculo getPorPlaca(String placa){
 		try{
 			Connection con = DB.getConnection();
-			PreparedStatement prep = con.prepareStatement("select * from veiculos where placa=?");
+			PreparedStatement prep = con.prepareStatement("select v.id as id, anofabricacao, chassi, placa, foto, cilindradas, " +
+					"m.descricao as desc, m.id as idmodelo " +
+					"from veiculos v inner join modelos m on v.idmodelo = m.id where v.placa=?");
 			prep.setString(1, placa);
 			ResultSet rs = prep.executeQuery();
 			if(rs.next()){
 				return montarVeiculo(rs);
 			}
 			else{ //não há veículo com a placa informada
+				return null;
+			}
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public Date[] getDatasUltimasTransacoes(Integer idVeiculo){
+		try{
+			Connection con = DB.getConnection();
+			PreparedStatement prep = con.prepareStatement("select placa as placa, max(c.data) as dcompra, max(ven.data) as dvenda " +
+					"from veiculos vei left join compras c on vei.id = c.idveiculo left join vendas ven on vei.id = ven.idveiculo " +
+					"where vei.id=?");
+			prep.setInt(1, idVeiculo);
+			ResultSet rs = prep.executeQuery();
+			if(rs.next()){
+				Date[] datas = new Date[2];
+				datas[0] = rs.getDate("dcompra");
+				datas[1] = rs.getDate("dvenda");
+				
+				return datas;
+			}
+			else{ //não há veículo com o id informado
 				return null;
 			}
 		}catch(SQLException ex){
