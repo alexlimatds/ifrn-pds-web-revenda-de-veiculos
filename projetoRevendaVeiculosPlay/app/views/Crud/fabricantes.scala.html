@@ -1,43 +1,26 @@
-@(fabricantes: List[Fabricante], inserirForm: Form[Fabricante], emEdicao: Fabricante)
+@(fabricantes: List[Fabricante], inserirForm: Form[Fabricante], emEdicao: Boolean)
 
 @import helper._
+@import helper.twitterBootstrap._
 
 @main("Fabricantes") {
+  <h1>Fabricantes Cadastrados</h1>
+  <table class="table table-bordered table-condensed">
+  @for(f <- fabricantes) {
+    <tr>
+      <td>@f.descricao</td>
+      <td>
+		<a href="@routes.Fabricantes.editar(f.id)" class="btn btn-mini">Editar</a>
+		<a href="@routes.Fabricantes.remover(f.id)" class="btn btn-danger btn-mini">Remover</a>
+      </td>
+    </tr>
+  }  
+  </table>
     
-    <h1>Fabricantes Cadastrados</h1>
-    
-    <table border="1">
-        @for(f <- fabricantes) {
-        <tr>
-            <td>
-                @f.descricao
-            </td>
-            <td>
-            	<form action="@{routes.Fabricantes.editar(f.id)}" method="GET">
-				    <input type="submit" value="Editar" />
-				</form> 
-            </td>
-            <td>    
-                @form(routes.Fabricantes.remover(f.id)) {
-                    <input type="submit" value="Excluir">
-                }
-            </td>
-        </tr>
-        }
-    </table>
-    
-    <h2>
-      @if(emEdicao == null){
-      	Novo Fabricante
-      }else{
-        Editar Fabricante
-      }
-    </h2>
-    
-    @form(routes.Fabricantes.salvar()) {
-   		@inputText(inserirForm("descricao"), '_label -> "Descrição")
-   		<input type="hidden" name="id" value="@inserirForm("id").value">
-   		<input type="submit" value="Salvar">
-    }
-    
+  <h2>@if(emEdicao) {Editar Fabricante} else {Novo Fabricante}</h2>   
+  @form(routes.Fabricantes.salvar()) {
+	@inputText(inserirForm("descricao"), '_label -> "DescrÃ§Ã£o")
+   	<input type="hidden" name="id" value="@inserirForm("id").value">
+   	<input type="submit" value="Salvar">
+  }
 }
