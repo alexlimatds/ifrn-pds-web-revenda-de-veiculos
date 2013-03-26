@@ -1,6 +1,5 @@
 package models;
 
-import dao.DAO;
 import dao.DAOCompra;
 
 public class RepositorioCompra extends Repositorio<Compra> {
@@ -9,7 +8,7 @@ public class RepositorioCompra extends Repositorio<Compra> {
 		super(new DAOCompra());
 	}
 	
-	public RepositorioCompra(DAO<Compra> dao) {
+	public RepositorioCompra(DAOCompra dao) {
 		super(dao);
 	}
 	
