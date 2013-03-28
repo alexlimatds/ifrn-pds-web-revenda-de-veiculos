@@ -1,12 +1,13 @@
 @(veiculos: List[Veiculo], inserirForm: Form[Veiculo], emEdicao: Veiculo, modelos: List[Modelo])
 
 @import helper._
+@import helper.twitterBootstrap._
 
 @main("Veículos") {
     
     <h1>Veículos Cadastrados</h1>
     
-    <table border="1">
+    <table class="table table-bordered table-condensed">
     	<tr>
     		<td>Ano</td>
     		<td>Placa</td>
@@ -16,31 +17,15 @@
     	</tr>
         @for(v <- veiculos) {
         <tr>
-            <td>
-                @v.anoFabricacao
-            </td>
-            <td>
-                @v.placa
-            </td>
-            <td>
-                @v.modelo.descricao
-            </td>
-            <td>
-                @v.cilindradas
-            </td>
-            <td>
-                @v.chassi
-            </td>
-            <td>
-            	<form action="@{routes.Veiculos.editar(v.id)}" method="GET">
-				    <input type="submit" value="Editar" />
-				</form> 
-            </td>
-            <td>    
-                @form(routes.Veiculos.remover(v.id)) {
-                    <input type="submit" value="Excluir">
-                }
-            </td>
+            <td>@v.anoFabricacao</td>
+            <td>@v.placa</td>
+            <td>@v.modelo.descricao</td>
+            <td>@v.cilindradas</td>
+            <td>@v.chassi</td>
+      <td>
+		<a href="@routes.Veiculos.editar(v.id)" class="btn btn-mini">Editar</a>
+		<a href="@routes.Veiculos.remover(v.id)" class="btn btn-danger btn-mini">Remover</a>
+      </td>
         </tr>
         }
     </table>
@@ -58,14 +43,15 @@
    		@inputText(inserirForm("placa"), '_label -> "Placa*")
    		@inputText(inserirForm("cilindradas"), '_label -> "Cilindradas")
    		@inputText(inserirForm("chassi"), '_label -> "Chassi")
-   		Modelo
-   		<select name="modelo.id">
-   			@for(m <- modelos){
-   				<option @if(emEdicao != null && m.id == emEdicao.modelo.id){selected="selected"} value="@m.id">@m.descricao</option>
-   			}
-   		</select>
+		@select(
+		  inserirForm("modelo.id"),
+		  options = modelos.map{m => (m.id.toString, m.descricao)},
+		  '_label -> "Modelo"
+		)
    		<input type="hidden" name="id" value="@inserirForm("id").value">
-   		<input type="submit" value="Salvar">
+	    <div class="actions">
+          <input type="submit" class="btn primary" value="Salvar" />
+        </div>
     }
     
 }

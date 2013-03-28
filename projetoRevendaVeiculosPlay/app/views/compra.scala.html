@@ -9,7 +9,7 @@
     <table border="1">
         <tr>
             <td colspan="2">
-              Veículo
+              Veï¿½culo
             </td>
         </tr>
         <tr>
@@ -57,9 +57,9 @@
     @form(routes.Compras.salvar()) {
    		@inputText(compraForm("data"), '_label -> "Data (dd/MM/yyyy HH:mm)")
    		@inputText(compraForm("preco"), '_label -> "Preco")
-   		@inputText(compraForm("obs"), '_label -> "Observações")
+   		@inputText(compraForm("obs"), '_label -> "ObservaÃ§Ãµes")
    		<input type="hidden" name="idVeiculo" value="@veiculo.id">
    		<input type="submit" value="Salvar">
     }
-    
+     
 }
