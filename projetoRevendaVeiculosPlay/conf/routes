@@ -6,16 +6,16 @@
 GET     /                           controllers.Application.index()
 
 # Fabricantes
-POST	/fabricante					controllers.Fabricantes.salvar()
+POST	/fabricante			controllers.Fabricantes.salvar()
 GET		/fabricante					controllers.Fabricantes.listar()
 GET		/fabricante/:cod/editar		controllers.Fabricantes.editar(cod: Int)
-POST	/fabricante/:cod			controllers.Fabricantes.remover(cod: Int)
+GET		/fabricante/:cod/remover	controllers.Fabricantes.remover(cod: Int)
 
 # Veiculos
 POST	/veiculo					controllers.Veiculos.salvar()
 GET		/veiculo					controllers.Veiculos.listar()
 GET		/veiculo/:cod/editar		controllers.Veiculos.editar(cod: Int)
-POST	/veiculo/:cod				controllers.Veiculos.remover(cod: Int)
+GET		/veiculo/:cod/remover		controllers.Veiculos.remover(cod: Int)
 
 # Compras
 GET     /compra                     controllers.Compras.iniciar()

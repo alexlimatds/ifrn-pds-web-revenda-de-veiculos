@@ -6,7 +6,7 @@
 @main("Fabricantes") {
   <h1>Fabricantes Cadastrados</h1>
   <table class="table table-bordered table-condensed">
-  @for(f <- fabricantes) {
+  @for(f <- fabricantes.sortBy(_.descricao)) {
     <tr>
       <td>@f.descricao</td>
       <td>
@@ -16,11 +16,21 @@
     </tr>
   }  
   </table>
-    
-  <h2>@if(emEdicao) {Editar Fabricante} else {Novo Fabricante}</h2>   
-  @form(routes.Fabricantes.salvar()) {
-	@inputText(inserirForm("descricao"), '_label -> "Descrção")
-   	<input type="hidden" name="id" value="@inserirForm("id").value">
-   	<input type="submit" value="Salvar">
+  @form(routes.Fabricantes.salvar()){
+    <fieldset> 
+    <legend>
+      @if(emEdicao) {Editar Fabricante} else {Novo Fabricante}
+    </legend>  
+	@inputText(
+	  inserirForm("descricao"),
+	  '_label -> "Descrição",
+	  'placeholder -> "Descrição do Fabricante"
+	)
+	<input type="hidden" name="id" value="@inserirForm("id").value">
+	
+	<div class="actions">
+        <input type="submit" class="btn primary" value="Salvar" />
+    </div>
+    </fieldset>
   }
 }

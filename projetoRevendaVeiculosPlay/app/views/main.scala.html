@@ -24,6 +24,7 @@
           <a class="brand" href="/">Revenda de Veículos</a>
           <ul class="nav">
             <li><a href="@{routes.Fabricantes.listar()}">Fabricantes</a></li>
+            <li><a href="@{routes.Veiculos.listar()}">Veículos</a></li>
             <li><a href="#about" class="disabled">About</a></li>
             <li><a href="#contact" class="disabled">Contact</a></li>
             <li><a href="#login">Login</a></li>
@@ -31,12 +32,12 @@
         </div>
       </div>
     </div>
-    <div class="container">
-<!-- <div class="alert alert-success">
+   <div class="container">
+@* <div class="alert alert-success">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <strong>Warning!</strong> Best check yo self, you're not looking too good.
-</div> -->
+</div> *@
       @content
-    </div>        
+    </div>
   </body>
 </html>
