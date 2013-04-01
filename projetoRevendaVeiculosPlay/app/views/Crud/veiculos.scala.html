@@ -1,4 +1,4 @@
-@(veiculos: List[Veiculo], inserirForm: Form[Veiculo], emEdicao: Veiculo, modelos: List[Modelo])
+@(veiculos: List[Veiculo], inserirForm: Form[Veiculo], emEdicao: Boolean, modelos: List[Modelo])
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -38,10 +38,10 @@
     @form(routes.Veiculos.salvar(), '_class -> "form-horizontal") {
     <fieldset>
     <legend>
-      @if(emEdicao == null){Novo Veículo} else {Editar Veículo}
+      @if(emEdicao){Editar Veículo} else {Novo Veículo}
     </legend>
-   		@inputText(inserirForm("anoFabricacao"), '_label -> "Ano*")
-   		@inputText(inserirForm("placa"), '_label -> "Placa*")
+   		@inputText(inserirForm("anoFabricacao"), '_label -> "Ano")
+   		@inputText(inserirForm("placa"), '_label -> "Placa")
    		@inputText(inserirForm("cilindradas"), '_label -> "Cilindradas")
    		@inputText(inserirForm("chassi"), '_label -> "Chassi")
 		@select(
