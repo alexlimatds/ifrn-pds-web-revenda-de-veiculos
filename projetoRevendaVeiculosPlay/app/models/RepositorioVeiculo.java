@@ -6,13 +6,11 @@ import dao.DAOVeiculo;
 
 
 public class RepositorioVeiculo extends Repositorio<Veiculo> {
-
-	public RepositorioVeiculo(){
-		super(new DAOVeiculo());
-	}
 	
-	public RepositorioVeiculo(DAOVeiculo dao) {
-		super(dao);
+	public static DAOVeiculo daoVeiculo = new DAOVeiculo();
+	
+	public RepositorioVeiculo(){
+		super(daoVeiculo);
 	}
 
 	public Veiculo getPorPlaca(String placa){

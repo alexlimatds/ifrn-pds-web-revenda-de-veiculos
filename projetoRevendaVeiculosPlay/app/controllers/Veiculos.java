@@ -10,12 +10,11 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import dao.DAOModelo;
-import dao.DAOVeiculo;
 
 public class Veiculos extends Controller {
 	
 	private static Form<Veiculo> formVeiculo = new Form<Veiculo>(Veiculo.class);
-	private static RepositorioVeiculo repVeiculo = new RepositorioVeiculo(new DAOVeiculo());
+	private static RepositorioVeiculo repVeiculo = new RepositorioVeiculo();
 	private static Repositorio<Modelo> repModelo = new Repositorio<Modelo>(new DAOModelo());
 	private static List<Modelo> modelos;
 	
