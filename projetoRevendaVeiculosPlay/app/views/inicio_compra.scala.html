@@ -2,13 +2,16 @@
 
 @import helper._
 
-@main("Compra - início") {
+@main("Compra - inï¿½cio") {
     
-    <h1>Compra - seleção de veículo</h1>
+    <h1>Compra - seleÃ§Ã£o de veÃ­culo</h1>
     
     @form(routes.Compras.selecionarVeiculo()) {
-   		@inputText(placaForm("placa"), '_label -> "Placa do veículo")
-   		<input type="submit" value="Avançar">
+   		@inputText(
+   		  placaForm("placa"),
+   		  '_label -> "Placa do veÃ­culo"
+   		)
+   		<input type="submit" value="AvanÃ§ar">
     }
     
 }

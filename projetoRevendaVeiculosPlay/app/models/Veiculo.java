@@ -2,13 +2,16 @@ package models;
 
 import java.util.Date;
 
+import play.data.validation.Constraints.Required;
+
 /**
  * Representa um veículo comercializado pela loja.
  *
  */
 public class Veiculo extends Model {
-	
+	@Required
 	public int anoFabricacao;
+	@Required
 	public String placa;
 	public String chassi;
 	public byte[] foto;
