@@ -2,14 +2,20 @@
 
 @import helper._
 
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
 @main("Compra - seleção de veículo") {
     
-    @form(routes.Compras.selecionarVeiculo()) {
+    @form(routes.Compras.selecionarVeiculo(), 'class -> "form-horizontal") {
    		@inputText(
    		  placaForm("placa"),
    		  '_label -> "Placa do veículo"
    		)
-   		<input type="submit" value="Avançar">
+  <div class="control-group">
+    <div class="controls">
+            <input type="submit" class="btn primary" value="Avançar" />
+    </div>
+    </div>
     }
     
 }

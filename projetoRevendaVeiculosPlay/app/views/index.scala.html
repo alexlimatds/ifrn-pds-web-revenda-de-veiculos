@@ -1,7 +1,9 @@
 @(message: String)
 
 @main("Revenda de Veículos") {
-    <a href="@{routes.Fabricantes.listar()}">CRUD Fabricantes</a><br>
-    <a href="@{routes.Veiculos.listar()}">CRUD Veículos</a><br>
-    <a href="@{routes.Compras.iniciar()}">Comprar Veículo</a>
+<ul>
+    <li><a href="@{routes.Fabricantes.listar()}">CRUD Fabricantes</a></li>
+    <li><a href="@{routes.Veiculos.listar()}">CRUD Veículos</a><br></li>
+    <li><a href="@{routes.Compras.iniciar()}">Comprar Veículo</a></li>
+</ul>
 }

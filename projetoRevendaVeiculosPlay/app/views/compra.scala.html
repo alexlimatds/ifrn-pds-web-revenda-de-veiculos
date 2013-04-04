@@ -2,6 +2,8 @@
 
 @import helper._
 
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
 @main("Registrar Compra") {
     <table class="table table-bordered table-condensed">
         <tr>
@@ -17,12 +19,16 @@
         </tr>
     </table>
     
-    @form(routes.Compras.salvar()) {
-   		@inputText(compraForm("data"), '_label -> "Data (dd/MM/yyyy HH:mm)")
+    @form(routes.Compras.salvar(), 'class -> "form-horizontal") {
+   		@inputDate(compraForm("data"), '_label -> "Data", '_help -> "dd/MM/yyyy HH:mm")
    		@inputText(compraForm("preco"), '_label -> "Preco")
-   		@inputText(compraForm("obs"), '_label -> "Observações")
+   		@textarea(compraForm("obs"), '_label -> "Observações")
    		<input type="hidden" name="idVeiculo" value="@veiculo.id">
-   		<input type="submit" value="Salvar">
+  <div class="control-group">
+    <div class="controls">
+            <input type="submit" class="btn primary" value="Salvar" />
+    </div>
+    </div>
     }
      
 }

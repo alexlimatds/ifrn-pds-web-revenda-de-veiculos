@@ -36,8 +36,10 @@ public class Veiculos extends Controller {
 		final Veiculo veiculo = novoVeiculo.get();
 		if (veiculo.id == null) {
 			repVeiculo.inserir(veiculo);
+			flash("success","Inserido com sucesso");
 		} else {
 			repVeiculo.atualizar(veiculo);
+			flash("success","Alterado com sucesso");
 		}
 		return INICIO;
 	}

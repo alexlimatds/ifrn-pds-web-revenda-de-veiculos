@@ -8,7 +8,6 @@ import java.util.Date;
  *
  */
 public class Compra extends Model {
-	
 	public Date data;
 	public BigDecimal preco;
 	public String obs;

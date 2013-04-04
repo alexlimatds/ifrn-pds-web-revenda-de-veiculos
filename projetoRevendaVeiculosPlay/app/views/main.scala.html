@@ -30,31 +30,29 @@
       </div>
     </div>
    <div class="container">
-   
+
+@if(flash.get("success")!=null){
  <div class="alert alert-success">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
-  Best check yo self, you're not looking too good.
-</div> 
+  @flash.get("success")
+</div>
+}
+@if(flash.get("error")!=null){
+ <div class="alert alert-error">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  @flash.get("error")
+</div>
+}
+
 
     </div>
        <div class="container">
-
             <div class="content"> 
-                <div class="alert">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Warning!</strong> Best check yo self, you're not looking too good.
-</div>
                 <div class="page-header">
                     <h1>@title</h1>
                 </div>
                 <div class="row">
                     <div class="span12">
-<div class="alert">
-<button>
-<a href="#" class="close" data-dismiss="alert">&times;</a>
-  <strong>Warning!</strong> Best check yo self, you're not looking too good.
-</button>
-</div>
                         @content
                     </div>
                 </div>
