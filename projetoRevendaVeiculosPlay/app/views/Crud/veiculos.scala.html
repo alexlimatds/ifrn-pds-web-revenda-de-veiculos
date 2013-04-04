@@ -1,7 +1,11 @@
 @(veiculos: List[Veiculo], inserirForm: Form[Veiculo], emEdicao: Boolean, modelos: List[Modelo])
 
+
 @import helper._
-@import helper.twitterBootstrap._
+
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
 
 @main("Veículos") { 
     <table class="table table-bordered table-condensed">
@@ -35,7 +39,7 @@
         </tbody>
     </table>
         
-    @form(routes.Veiculos.salvar(), '_class -> "form-horizontal") {
+    @form(routes.Veiculos.salvar(), 'class -> "form-horizontal") {
     <fieldset>
     <legend>
       @if(emEdicao){Editar Veículo} else {Novo Veículo}
@@ -50,9 +54,11 @@
 		  '_label -> "Modelo"
 		)
    		<input type="hidden" name="id" value="@inserirForm("id").value">
-	    <div class="actions">
+<div class="control-group">
+    <div class="controls">   		
           <input type="submit" class="btn primary" value="Salvar" />
         </div>
+       </div>
  </fieldset>
     }
     

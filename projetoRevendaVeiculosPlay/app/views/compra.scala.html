@@ -3,52 +3,17 @@
 @import helper._
 
 @main("Registrar Compra") {
-    
-    <table border="1">
+    <table class="table table-bordered table-condensed">
         <tr>
-            <td colspan="2">
-              Ve�culo
-            </td>
+            <th>Ano</th><th>Placa</th><th>Chassi</th>
+            <th>Cilindradas</th><th>Modelo</th>
         </tr>
         <tr>
-            <td>
-                Ano
-            </td>
-            <td>
-                @veiculo.anoFabricacao
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Placa
-            </td>
-            <td>
-                @veiculo.placa
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Chassi
-            </td>
-            <td>
-                @veiculo.chassi
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Cilindradas
-            </td>
-            <td>
-                @veiculo.cilindradas
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Modelo
-            </td>
-            <td>
-                @veiculo.modelo.descricao
-            </td>
+            <td>@veiculo.anoFabricacao</td>
+            <td>@veiculo.placa</td>
+            <td>@veiculo.chassi</td>
+            <td>@veiculo.cilindradas</td>
+            <td>@veiculo.modelo.descricao</td>
         </tr>
     </table>
     

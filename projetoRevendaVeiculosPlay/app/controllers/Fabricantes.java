@@ -2,47 +2,52 @@ package controllers;
 
 import java.util.List;
 
-import models.Fabricante;
-import models.Repositorio;
+import models.*;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.Crud.fabricantes;
 import dao.DAOFabricante;
-import views.html.Crud.*;
 
 public class Fabricantes extends Controller {
 
-	private static Form<Fabricante> formFabricante = new Form<Fabricante>(
+	private final static Form<Fabricante> formFabricante = new Form<Fabricante>(
 			Fabricante.class);
-	private static Repositorio<Fabricante> repFabricante = new Repositorio<Fabricante>(
+	private final static Repositorio<Fabricante> repFabricante = new Repositorio<Fabricante>(
 			new DAOFabricante());
 
-    public static Result salvar() { 
-		Form<Fabricante> novoFabricante = formFabricante.bindFromRequest();
-		Fabricante fabricante = novoFabricante.get();
+	private final static List<Fabricante> todos() {
+		return repFabricante.todos();
+	}
+
+	private final static Result INICIO = redirect(routes.Fabricantes.listar());
+
+	public static Result salvar() {
+		final Form<Fabricante> novoFabricante = formFabricante
+				.bindFromRequest();
+		final Fabricante fabricante = novoFabricante.get();
 		if (fabricante.id == null) {
 			repFabricante.inserir(fabricante);
-			flash("sucess", "Inserido com sucesso.");
+			flash("success", "Inserido com sucesso.");
 		} else {
 			repFabricante.atualizar(fabricante);
-			flash("sucess", "Atualizado com sucesso.");
+			flash("success", "Atualizado com sucesso.");
 		}
-		return redirect(routes.Fabricantes.listar());
+		return INICIO;
 	}
 
 	public static Result listar() {
-		List<Fabricante> lista = repFabricante.todos();
-		return ok(fabricantes.render(lista, formFabricante, false));
+		return ok(fabricantes.render(todos(), formFabricante, false));
 	}
 
 	public static Result editar(Integer id) {
-		List<Fabricante> lista = repFabricante.todos();
-		Fabricante emEdicao = repFabricante.getPorId(id);
-		return ok(fabricantes.render(lista, formFabricante.fill(emEdicao), true));
+		Form<Fabricante> emEdicao = formFabricante.fill(repFabricante
+				.getPorId(id));
+		return ok(fabricantes.render(todos(), emEdicao, true));
 	}
 
 	public static Result remover(Integer id) {
 		repFabricante.excluir(id);
-		return redirect(routes.Fabricantes.listar());
+		return INICIO;
 	}
 }
