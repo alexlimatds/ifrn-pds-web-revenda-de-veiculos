@@ -1,0 +1,28 @@
+@(formLogin: Form[controllers.Application.Login])
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
+@main("Login") {
+<p>Você precisa fazer login para ter acesso à área restrita.</p>
+<p>O login é <code>admin</code></p>
+<p>A senha é <code>123</code></p>
+
+  @form(action = routes.Application.autenticar(), 'class ->"form-horizontal") {
+    <fieldset> 
+    @inputText(
+      formLogin("login")
+    )
+    @inputPassword(
+      formLogin("senha")
+    )
+<div class="control-group">
+    <div class="controls">
+      <input type="submit" class="btn primary btn-info" 
+      value="Logar !" />
+    </div>
+    </div>
+    </fieldset>
+
+    }
+}
