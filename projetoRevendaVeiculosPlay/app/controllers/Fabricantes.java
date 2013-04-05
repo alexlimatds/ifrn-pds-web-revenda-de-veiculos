@@ -6,11 +6,12 @@ import models.*;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.html.Crud.fabricantes;
 import dao.DAOFabricante;
 
+@Security.Authenticated(Seguranca.class)
 public class Fabricantes extends Controller {
-
 	private final static Form<Fabricante> formFabricante = new Form<Fabricante>(
 			Fabricante.class);
 	private final static Repositorio<Fabricante> repFabricante = new Repositorio<Fabricante>(
@@ -19,9 +20,9 @@ public class Fabricantes extends Controller {
 	private final static List<Fabricante> todos() {
 		return repFabricante.todos();
 	}
-
+ 
 	private final static Result INICIO = redirect(routes.Fabricantes.listar());
-
+	
 	public static Result salvar() {
 		final Form<Fabricante> novoFabricante = formFabricante
 				.bindFromRequest();

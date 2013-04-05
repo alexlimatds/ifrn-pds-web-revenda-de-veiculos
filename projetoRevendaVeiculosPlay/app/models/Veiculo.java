@@ -27,10 +27,10 @@ public class Veiculo extends Model {
 	 * @return
 	 */
 	public boolean isEmPosseDaLoja() {
-		RepositorioVeiculo repositorio = new RepositorioVeiculo();
-		Date[] datas = repositorio.getDatasUltimasTransacoes(id);
-		Date dataCompra = datas[0];
-		Date dataVenda = datas[1];
+		final RepositorioVeiculo repositorio = new RepositorioVeiculo();
+		final Date[] datas = repositorio.getDatasUltimasTransacoes(id);
+		final Date dataCompra = datas[0];
+		final Date dataVenda = datas[1];
 		if(dataCompra == null){
 			//veículo nunca foi comprado pela loja, portanto não está em posse da loja
 			return false;

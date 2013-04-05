@@ -3,13 +3,17 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                   controllers.Application.index()
+GET		/login				controllers.Application.login()
+POST	/autenticar			controllers.Application.autenticar()
+GET		/logout				controllers.Application.logout()	
 
 # Fabricantes
 POST	/fabricante			controllers.Fabricantes.salvar()
 GET		/fabricante					controllers.Fabricantes.listar()
 GET		/fabricante/:cod/editar		controllers.Fabricantes.editar(cod: Int)
 GET		/fabricante/:cod/remover	controllers.Fabricantes.remover(cod: Int)
+
 
 # Veiculos
 POST	/veiculo					controllers.Veiculos.salvar()
