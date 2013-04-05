@@ -1,9 +1,16 @@
 @()
 
+@import scala.collection.immutable._
+
 @main("Revenda de Veículos") {
 <ul>
     <li><a href="@{routes.Fabricantes.listar()}">CRUD Fabricantes</a></li>
     <li><a href="@{routes.Veiculos.listar()}">CRUD Veículos</a><br></li>
     <li><a href="@{routes.Compras.iniciar()}">Comprar Veículo</a></li>
 </ul>
+
+
+@defining(List(1,2,3)) { lista =>
+  <div>Hello @lista.head</div>
+}
 }
