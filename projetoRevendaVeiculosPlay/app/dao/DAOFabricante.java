@@ -65,7 +65,7 @@ public class DAOFabricante implements DAO<Fabricante> {
 			Connection con = DB.getConnection();
 			PreparedStatement prep = con.prepareStatement("select * from fabricantes");
 			ResultSet rs = prep.executeQuery();
-			ArrayList<Fabricante> fabricantes = new ArrayList<Fabricante>();
+			List<Fabricante> fabricantes = new ArrayList<Fabricante>();
 			while(rs.next()){
 				Fabricante f = montarFabricante(rs);
 				fabricantes.add(f);

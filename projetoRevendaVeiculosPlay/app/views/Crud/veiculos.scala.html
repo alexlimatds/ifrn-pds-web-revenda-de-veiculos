@@ -1,20 +1,24 @@
-@(veiculos: List[Veiculo], inserirForm: Form[Veiculo], emEdicao: Veiculo, modelos: List[Modelo])
+@(veiculos: List[Veiculo], inserirForm: Form[Veiculo], emEdicao: Boolean, modelos: List[Modelo])
+
 
 @import helper._
-@import helper.twitterBootstrap._
 
-@main("Veículos") {
-    
-    <h1>Veículos Cadastrados</h1>
-    
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
+
+@main("Veículos") { 
     <table class="table table-bordered table-condensed">
+    	<thead>
     	<tr>
-    		<td>Ano</td>
-    		<td>Placa</td>
-    		<td>Modelo</td>
-    		<td>Cilindradas</td>
-    		<td>Chassi</td>
+    		<th>Ano</th>
+    		<th>Placa</th>
+    		<th>Modelo</th>
+    		<th>Cilindradas</th>
+    		<th>Chassi</th>
     	</tr>
+<thead>
+<tbody>
         @for(v <- veiculos) {
         <tr>
             <td>@v.anoFabricacao</td>
@@ -23,24 +27,25 @@
             <td>@v.cilindradas</td>
             <td>@v.chassi</td>
       <td>
-		<a href="@routes.Veiculos.editar(v.id)" class="btn btn-mini">Editar</a>
-		<a href="@routes.Veiculos.remover(v.id)" class="btn btn-danger btn-mini">Remover</a>
+		<a href="@routes.Veiculos.editar(v.id)" class="btn btn-mini">
+		  <i class="icon-edit"></i> Editar
+		</a>
+		<a href="@routes.Veiculos.remover(v.id)" class="btn btn-danger btn-mini">
+		  <i class="icon-trash icon-white"></i> Remover
+		</a>
       </td>
         </tr>
         }
+        </tbody>
     </table>
-    
-    <h2>
-      @if(emEdicao == null){
-      	Novo Veículo
-      }else{
-        Editar Veículo
-      }
-    </h2>
-    
-    @form(routes.Veiculos.salvar()) {
-   		@inputText(inserirForm("anoFabricacao"), '_label -> "Ano*")
-   		@inputText(inserirForm("placa"), '_label -> "Placa*")
+        
+    @form(routes.Veiculos.salvar(), 'class -> "form-horizontal") {
+    <fieldset>
+    <legend>
+      @if(emEdicao){Editar Veículo} else {Novo Veículo}
+    </legend>
+   		@inputText(inserirForm("anoFabricacao"), '_label -> "Ano")
+   		@inputText(inserirForm("placa"), '_label -> "Placa")
    		@inputText(inserirForm("cilindradas"), '_label -> "Cilindradas")
    		@inputText(inserirForm("chassi"), '_label -> "Chassi")
 		@select(
@@ -49,9 +54,12 @@
 		  '_label -> "Modelo"
 		)
    		<input type="hidden" name="id" value="@inserirForm("id").value">
-	    <div class="actions">
+<div class="control-group">
+    <div class="controls">   		
           <input type="submit" class="btn primary" value="Salvar" />
         </div>
+       </div>
+ </fieldset>
     }
     
 }

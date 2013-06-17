@@ -2,55 +2,60 @@ package controllers;
 
 import java.util.List;
 
-import models.Modelo;
-import models.Repositorio;
-import models.RepositorioVeiculo;
-import models.Veiculo;
+import models.*;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import dao.DAOModelo;
 
+import views.html.Crud.*;
+
 public class Veiculos extends Controller {
-	
-	private static Form<Veiculo> formVeiculo = new Form<Veiculo>(Veiculo.class);
-	private static RepositorioVeiculo repVeiculo = new RepositorioVeiculo();
-	private static Repositorio<Modelo> repModelo = new Repositorio<Modelo>(new DAOModelo());
-	private static List<Modelo> modelos;
-	
+
+	private final static Form<Veiculo> formVeiculo = new Form<Veiculo>(
+			Veiculo.class);
+	private final static RepositorioVeiculo repVeiculo = new RepositorioVeiculo();
+	private final static Repositorio<Modelo> repModelo = new Repositorio<Modelo>(
+			new DAOModelo());
+
+	private static List<Modelo> modelos() {
+		return repModelo.todos();
+	}
+
+	private static List<Veiculo> todos() {
+		return repVeiculo.todos();
+	}
+
+	private final static Result INICIO = redirect(routes.Veiculos.listar());
+
 	public static Result salvar() {
-		Form<Veiculo> novoVeiculo = formVeiculo.bindFromRequest();
-		Integer idModelo = Integer.parseInt(novoVeiculo.field("modelo.id").value());
-		Veiculo veiculo = novoVeiculo.get();
-		Modelo modelo = new Modelo(idModelo, null, null, null);
-		veiculo.modelo = modelo;
-		if(veiculo.id == null){
+		final Form<Veiculo> novoVeiculo = formVeiculo.bindFromRequest();
+		if (novoVeiculo.hasErrors()) {
+			return ok(veiculos.render(todos(), novoVeiculo, true, modelos()));
+		}
+		final Veiculo veiculo = novoVeiculo.get();
+		if (veiculo.id == null) {
 			repVeiculo.inserir(veiculo);
-		}
-		else{
+			flash("success","Inserido com sucesso");
+		} else {
 			repVeiculo.atualizar(veiculo);
+			flash("success","Alterado com sucesso");
 		}
-		
-		return redirect(routes.Veiculos.listar());
+		return INICIO;
 	}
-	
+
 	public static Result listar() {
-		List<Veiculo> lista = repVeiculo.todos();
-		modelos = repModelo.todos();
-		
-		return ok(views.html.Crud.veiculos.render(lista, formVeiculo, null, modelos));
+		return ok(veiculos.render(todos(), formVeiculo, false, modelos()));
 	}
-	
+
 	public static Result editar(Integer id) {
-		List<Veiculo> lista = repVeiculo.todos();
-		Veiculo emEdicao = repVeiculo.getPorId(id);
-		
-		return ok(views.html.Crud.veiculos.render(lista, formVeiculo.fill(emEdicao), emEdicao,  modelos));
+		final Form<Veiculo> emEdicao = formVeiculo
+				.fill(repVeiculo.getPorId(id));
+		return ok(veiculos.render(todos(), emEdicao, true, modelos()));
 	}
-	
+
 	public static Result remover(Integer id) {
 		repVeiculo.excluir(id);
-		
-		return redirect(routes.Veiculos.listar());
+		return INICIO;
 	}
 }

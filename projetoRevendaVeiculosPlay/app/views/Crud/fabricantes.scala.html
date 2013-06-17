@@ -1,22 +1,27 @@
 @(fabricantes: List[Fabricante], inserirForm: Form[Fabricante], emEdicao: Boolean)
 
 @import helper._
-@import helper.twitterBootstrap._
+
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
 @main("Fabricantes") {
-  <h1>Fabricantes Cadastrados</h1>
   <table class="table table-bordered table-condensed">
   @for(f <- fabricantes.sortBy(_.descricao)) {
     <tr>
       <td>@f.descricao</td>
       <td>
-		<a href="@routes.Fabricantes.editar(f.id)" class="btn btn-mini">Editar</a>
-		<a href="@routes.Fabricantes.remover(f.id)" class="btn btn-danger btn-mini">Remover</a>
+		<a href="@routes.Fabricantes.editar(f.id)" class="btn btn-mini">
+		  <i class="icon-edit"></i> Editar
+		</a>
+		<a href="@routes.Fabricantes.remover(f.id)" class="btn btn-danger btn-mini">
+		  <i class="icon-trash icon-white"></i> Remover
+		</a>
       </td>
     </tr>
   }  
   </table>
-  @form(routes.Fabricantes.salvar()){
+  @form(routes.Fabricantes.salvar(), 'class -> "form-horizontal"){
     <fieldset> 
     <legend>
       @if(emEdicao) {Editar Fabricante} else {Novo Fabricante}
@@ -27,9 +32,10 @@
 	  'placeholder -> "Descrição do Fabricante"
 	)
 	<input type="hidden" name="id" value="@inserirForm("id").value">
-	
-	<div class="actions">
-        <input type="submit" class="btn primary" value="Salvar" />
+  <div class="control-group">
+    <div class="controls">
+            <input type="submit" class="btn primary" value="Salvar" />
+    </div>
     </div>
     </fieldset>
   }
