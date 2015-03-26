@@ -14,7 +14,8 @@
 <body>
   <div class="container">
     <h2>Fabricantes</h2>
-    <div class="${(not empty mensagem?'alert alert-info':'hidden')}">
+    <c:set var="alertClass" value="${(!erro?'alert alert-success':'alert alert-danger')}"></c:set>
+    <div class="${(not empty mensagem?alertClass:'hidden')}">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <p>${mensagem}</p>
     </div>

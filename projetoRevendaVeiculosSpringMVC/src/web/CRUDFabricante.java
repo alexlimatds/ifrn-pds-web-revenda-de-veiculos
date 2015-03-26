@@ -16,7 +16,7 @@ import dominio.RepositorioFabricante;
 
 @Controller
 @RequestMapping("/fabricantes")
-public class CRUDFrabricante {
+public class CRUDFabricante {
 	
 	@Autowired
 	private RepositorioFabricante repositorio;
@@ -49,6 +49,7 @@ public class CRUDFrabricante {
 			rAttrs.addFlashAttribute("mensagem", "Fabricante salvo com sucesso.");
 		}catch(Exception ex){
 			ex.printStackTrace();
+			rAttrs.addFlashAttribute("erro", true);
 			rAttrs.addFlashAttribute("mensagem", "Ocorreu um erro durante a operação.");
 		}
 		return "redirect:/fabricantes";
@@ -62,20 +63,23 @@ public class CRUDFrabricante {
 			rAttrs.addFlashAttribute("mensagem", "Fabricante excluído com sucesso.");
 		}catch(Exception ex){
 			ex.printStackTrace();
+			rAttrs.addFlashAttribute("erro", true);
 			rAttrs.addFlashAttribute("mensagem", "Ocorreu um erro durante a operação.");
 		}
 		return "redirect:/fabricantes";
 	}
 	
 	@RequestMapping("/alterar")
-	public String novo(@RequestParam("id") Integer idFabricante, Model model){
+	public String novo(@RequestParam("id") Integer idFabricante, Model model, 
+			final RedirectAttributes rAttrs){
 		Fabricante f = repositorio.getPorId(idFabricante);
 		if(f != null){
 			model.addAttribute("fabricante", f);
 			model.addAttribute("titulo", "Alterar Fabricante");
 			return "fabricantes/edicao";
 		}
-		model.addAttribute("mensagem", "Fabricante não encontrado");
-		return "forward:/fabricantes";
+		rAttrs.addFlashAttribute("erro", true);
+		rAttrs.addFlashAttribute("mensagem", "Fabricante não encontrado");
+		return "redirect:/fabricantes";
 	}
 }
