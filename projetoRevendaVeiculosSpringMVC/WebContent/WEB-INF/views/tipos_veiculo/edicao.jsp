@@ -15,8 +15,8 @@
 <body>
   <div class="container">
     <h2>${titulo}</h2>
-    <c:url var="actionUrl" value="/fabricantes/salvar"/>
-    <form:form action="${actionUrl}" method="post" role="form" modelAttribute="fabricante">
+    <c:url var="actionUrl" value="/tipos_veiculo/salvar"/>
+    <form:form action="${actionUrl}" method="post" role="form" modelAttribute="tipo">
       <div class="form-group">
         <label for="descricao">DESCRIÇÃO</label>
         <form:input path="descricao" class="form-control"/>

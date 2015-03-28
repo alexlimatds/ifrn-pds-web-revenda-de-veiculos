@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,9 +36,11 @@ public class CRUDFabricante {
 	}
 	
 	@RequestMapping(value="/salvar", method=RequestMethod.POST)
-	public String salvar(@Valid Fabricante fabricante, BindingResult br, 
-			final RedirectAttributes rAttrs){
+	public String salvar(@Valid @ModelAttribute("fabricante") Fabricante fabricante, 
+			BindingResult br, @RequestParam("titulo") String titulo, 
+			Model model, final RedirectAttributes rAttrs){
 		if(br.hasErrors()){
+			model.addAttribute("titulo", titulo);
 			return "fabricantes/edicao";
 		}
 		
