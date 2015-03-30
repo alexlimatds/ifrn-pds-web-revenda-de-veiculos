@@ -73,7 +73,7 @@ public class CRUDFabricante {
 	}
 	
 	@RequestMapping("/alterar")
-	public String novo(@RequestParam("id") Integer idFabricante, Model model, 
+	public String alterar(@RequestParam("id") Integer idFabricante, Model model, 
 			final RedirectAttributes rAttrs){
 		Fabricante f = repositorio.getPorId(idFabricante);
 		if(f != null){

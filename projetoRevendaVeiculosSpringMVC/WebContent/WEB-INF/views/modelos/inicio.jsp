@@ -5,11 +5,10 @@
 <html lang="pt">
 <head>
   <!-- Página que utiliza Ajax para realizar a exclusão de registros. 
-       Após a exclusão do registro no lado servidor, a atualização da 
-       tabela é feita somente localmente, sem obter uma nova tabela de 
-       registros do servidor. -->
+       Após a exclusão do registro no lado servidor, faz uma nova requisição 
+       solicitando a tabela com os registros. -->
   <meta charset="iso-8859-1">
-  <title>Tipos de Veículo</title>
+  <title>Modelos</title>
   <c:url var="resources" value="/resources"/>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
@@ -23,12 +22,15 @@
   	  bootbox.confirm(msg, function(result){
   		if(result){
   		  var param = {id : idEntidade};
-  		  $.getJSON('tipos_veiculo/excluir', param, function(data){
+  		  $.getJSON('modelos/excluir', param, function(data){
   		    var msg = data['mensagem'];
   		    var erro = data['erro'];
   		    atualizarAlert(msg, erro);
-  		    //Remove a linha da tabela
-  		    $(eventSource).closest('tr').remove();
+  		    $.get('modelos/modelos', function(data){
+  		    	var $tbody = $('#tblRegistros').children('tbody');
+  		    	$tbody.empty();
+  		    	$tbody.append(data);
+  		    });
   		  });
   		}
   	  });
@@ -37,7 +39,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>Tipos de Veículo</h2>
+    <h2>Modelos</h2>
     
     <div class="alert alert-dismissible" role="alert" id="divMsg" ${(not empty erro?'erro':'')}>
       <button type="button" class="close" data-hide="alert">
@@ -46,34 +48,21 @@
       <p id="pMsg">${mensagem}</p>
     </div>
     
-    <c:url var="actionUrl" value="/tipos_veiculo"/>
+    <c:url var="actionUrl" value="/modelos"/>
     <a class="btn btn-default" href="${actionUrl}/novo">
-      <span class="glyphicon glyphicon-plus"></span> Novo Tipo de Veículo
+      <span class="glyphicon glyphicon-plus"></span> Novo Modelo
     </a>
     <table class="table table-hover" id="tblRegistros">
       <thead>
         <tr>
+          <th>Descrição</th>
+          <th>Fabricante</th>
           <th>Tipo de Veículo</th>
           <th colspan="2" class="text-center">Opções</th>
         </tr>
       </thead>
       <tbody>
-        <c:forEach var="tipo" items="${tipos}">
-          <tr>
-            <td>${tipo.descricao}</td>
-            <td class="text-center">
-              <a class="btn btn-danger" href="#" 
-                onclick="confirmarExclusao('${tipo.id}', '${tipo.descricao}', this);">
-                <span class="glyphicon glyphicon-trash"></span> Excluir
-              </a>
-            </td>
-            <td class="text-center">
-              <a class="btn btn-danger" href="${actionUrl}/alterar?id=${tipo.id}">
-                <span class="glyphicon glyphicon-edit"></span> Alterar
-              </a>
-            </td>
-          </tr>
-        </c:forEach>
+        <c:import url="/WEB-INF/views/modelos/modelos.jsp" />
       </tbody>
     </table>
   </div>

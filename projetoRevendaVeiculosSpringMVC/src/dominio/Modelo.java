@@ -1,15 +1,24 @@
 package dominio;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * Representa um modelo de veículo como Gol, Uno, Fiesta, etc.
  */
 public class Modelo extends Entidade{
 	
+	@NotNull
+	@NotEmpty
 	private String descricao;
+	@NotNull
 	private Fabricante fabricante;
+	@NotNull
 	private TipoVeiculo tipo;
 	
-	public Modelo(Integer id, String descricao, Fabricante fabricante, TipoVeiculo tipo) {
+	public Modelo(Integer id, String descricao, Fabricante fabricante, 
+			TipoVeiculo tipo) {
 		super(id);
 		this.descricao = descricao;
 		this.fabricante = fabricante;
@@ -17,7 +26,6 @@ public class Modelo extends Entidade{
 	}
 	
 	public Modelo() {
-		super();
 	}
 
 	public String getDescricao() {

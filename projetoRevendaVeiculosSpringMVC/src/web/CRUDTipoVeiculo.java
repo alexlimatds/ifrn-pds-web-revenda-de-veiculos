@@ -78,7 +78,7 @@ public class CRUDTipoVeiculo {
 	}
 	
 	@RequestMapping("/alterar")
-	public String novo(@RequestParam("id") Integer idTipoVeiculo, Model model){
+	public String alterar(@RequestParam("id") Integer idTipoVeiculo, Model model){
 		TipoVeiculo tipo = repositorio.getPorId(idTipoVeiculo);
 		if(tipo != null){
 			model.addAttribute("tipo", tipo);
