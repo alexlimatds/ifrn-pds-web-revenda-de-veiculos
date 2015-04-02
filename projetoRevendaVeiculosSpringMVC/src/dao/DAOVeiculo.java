@@ -1,5 +1,6 @@
 package dao;
 
+import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,29 +13,46 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import dominio.Modelo;
 import dominio.RepositorioVeiculo;
 import dominio.Veiculo;
 
+@Repository
 public class DAOVeiculo implements RepositorioVeiculo{
 	
 	@Autowired
 	private DataSource dataSource;
+	@Autowired
+	private DAOModelo daoModelo;
+	private final String selectQuery = "select ID, " +
+			"ANO, CHASSI, PLACA, FOTO, CILINDRADAS, " +
+			"ID_MODELO, MIME_TYPE_FOTO " +
+			"from VEICULOS"; 
 	
 	@Override
 	public Integer inserir(Veiculo v) {
 		try{
 			Connection con = dataSource.getConnection();
-			PreparedStatement prep = con.prepareStatement("insert into veiculos " +
-					"(anofabricacao, placa, cilindradas, idmodelo, chassi) " +
-					"values (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement prep = con.prepareStatement("insert into VEICULOS " +
+					"(ANO, PLACA, CILINDRADAS, CHASSI, FOTO, MIME_TYPE_FOTO, ID_MODELO) " +
+					"values (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			prep.setInt(1, v.getAnoFabricacao());
 			prep.setString(2, v.getPlaca());
-			prep.setInt(3, v.getCilindradas());
-			prep.setInt(4, v.getModelo().getId());
-			prep.setString(5, v.getChassi());
+			prep.setObject(3, v.getCilindradas());
+			prep.setString(4, v.getChassi());
+			if(v.getFoto() != null){
+				prep.setBinaryStream(5, new ByteArrayInputStream(v.getFoto()));
+				prep.setString(6, v.getMimeTypeFoto());
+			}
+			else{
+				prep.setObject(5, null);
+				prep.setString(6, null);
+			}
+			prep.setInt(7, v.getModelo().getId());
 			prep.executeUpdate();
+			
 			//obtém id gerado pelo banco
 			ResultSet rs = prep.getGeneratedKeys();
 			rs.next();
@@ -52,15 +70,23 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	public void atualizar(Veiculo v) {
 		try{
 			Connection con = dataSource.getConnection();
-			PreparedStatement prep = con.prepareStatement("update veiculos " +
-					"set anofabricacao=?, placa=?, cilindradas=?, idmodelo=?, " +
-					"chassi=? where id=?");
+			PreparedStatement prep = con.prepareStatement("update VEICULOS " +
+					"set ANO=?, PLACA=?, CHASSI=?, CILINDRADAS=?, FOTO=?, MIME_TYPE_FOTO=?, "
+					+ "ID_MODELO=? where ID=?");
 			prep.setInt(1, v.getAnoFabricacao());
 			prep.setString(2, v.getPlaca());
-			prep.setInt(3, v.getCilindradas());
-			prep.setInt(4, v.getModelo().getId());
-			prep.setString(5, v.getChassi());
-			prep.setInt(6, v.getId());
+			prep.setString(3, v.getChassi());
+			prep.setObject(4, v.getCilindradas());
+			if(v.getFoto() != null){
+				prep.setBinaryStream(5, new ByteArrayInputStream(v.getFoto()));
+				prep.setString(6, v.getMimeTypeFoto());
+			}
+			else{
+				prep.setObject(5, null);
+				prep.setString(6, null);
+			}
+			prep.setInt(7, v.getModelo().getId());
+			prep.setInt(8, v.getId());
 			prep.executeUpdate();
 		}catch(SQLException ex){
 			ex.printStackTrace();
@@ -72,7 +98,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	public void excluir(Integer id) {
 		try{
 			Connection con = dataSource.getConnection();
-			PreparedStatement prep = con.prepareStatement("delete from veiculos where id=?");
+			PreparedStatement prep = con.prepareStatement("delete from VEICULOS where ID=?");
 			prep.setInt(1, id);
 			prep.executeUpdate();
 		}catch(SQLException ex){
@@ -86,10 +112,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 		ArrayList<Veiculo> veiculos = new ArrayList<Veiculo>();
 		try{
 			Connection con = dataSource.getConnection();
-			PreparedStatement prep = con.prepareStatement("select v.id as id, " +
-					"anofabricacao, chassi, placa, foto, cilindradas, " +
-					"m.descricao as desc, m.id as idmodelo  " +
-					"from veiculos v inner join modelos m on v.idmodelo = m.id ");
+			PreparedStatement prep = con.prepareStatement(selectQuery);
 			ResultSet rs = prep.executeQuery();
 			while(rs.next()){
 				Veiculo v = montarVeiculo(rs);
@@ -106,44 +129,13 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	public Veiculo getPorId(Integer id) {
 		try{
 			Connection con = dataSource.getConnection();
-			PreparedStatement prep = con.prepareStatement("select v.id as id, " +
-					"anofabricacao, chassi, placa, foto, cilindradas, " +
-					"m.descricao as desc, m.id as idmodelo " +
-					"from veiculos v inner join modelos m on v.idmodelo = m.id where v.id=?");
+			PreparedStatement prep = con.prepareStatement(selectQuery + " where ID=?");
 			prep.setInt(1, id);
 			ResultSet rs = prep.executeQuery();
 			if(rs.next()){
 				return montarVeiculo(rs);
 			}
 			else{ //não há veículo com o id informado
-				return null;
-			}
-		}catch(SQLException ex){
-			ex.printStackTrace();
-			throw new RuntimeException(ex);
-		}
-	}
-	
-	/**
-	 * Retorna um veículo específico a partir de uma determinada placa. 
-	 * @param placa
-	 * @return 	uma instância de veículo ou null caso não seja encontrado veículo com a placa 
-	 * 			especificada. A instância retornada tem o atributo modelo não preenchido, ou seja, 
-	 * 			com null.
-	 */
-	public Veiculo getPorPlaca(String placa){
-		try{
-			Connection con = dataSource.getConnection();
-			PreparedStatement prep = con.prepareStatement("select v.id as id, anofabricacao, " +
-					"chassi, placa, foto, cilindradas, " +
-					"m.descricao as desc, m.id as idmodelo " +
-					"from veiculos v inner join modelos m on v.idmodelo = m.id where v.placa=?");
-			prep.setString(1, placa);
-			ResultSet rs = prep.executeQuery();
-			if(rs.next()){
-				return montarVeiculo(rs);
-			}
-			else{ //não há veículo com a placa informada
 				return null;
 			}
 		}catch(SQLException ex){
@@ -178,6 +170,23 @@ public class DAOVeiculo implements RepositorioVeiculo{
 		}
 	}
 	
+	public List<Veiculo> getPor(String campo, Object valor){
+		try{
+			Connection con = dataSource.getConnection();
+			PreparedStatement prep = con.prepareStatement(selectQuery + " where "+ campo +"=?");
+			prep.setObject(1, valor);
+			ResultSet rs = prep.executeQuery();
+			ArrayList<Veiculo> lista = new ArrayList<>();
+			while(rs.next()){
+				lista.add( montarVeiculo(rs) );
+			}
+			return lista;
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
+	}
+	
 	/**
 	 * Cria uma instância de Veiculo a partir de um registro apontado por um ResultSet.
 	 * @param rs ResultSet já apontando para o registro.
@@ -186,16 +195,15 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	private Veiculo montarVeiculo(ResultSet rs){
 		try{
 			Veiculo v = new Veiculo();
-			v.setId( rs.getInt("id") );
-			v.setAnoFabricacao( rs.getInt("anofabricacao") );
-			v.setChassi( rs.getString("chassi") );
-			v.setCilindradas( rs.getInt("cilindradas") );
-			v.setFoto( rs.getBytes("foto") );
-			v.setPlaca( rs.getString("placa") );
+			v.setId( rs.getInt("ID") );
+			v.setAnoFabricacao( rs.getInt("ANO") );
+			v.setChassi( rs.getString("CHASSI") );
+			v.setCilindradas( rs.getInt("CILINDRADAS") );
+			v.setFoto( rs.getBytes("FOTO") );
+			v.setMimeTypeFoto( rs.getString("MIME_TYPE_FOTO") );
+			v.setPlaca( rs.getString("PLACA") );
 			
-			Modelo modelo = new Modelo();
-			modelo.setId( rs.getInt("idmodelo") );
-			modelo.setDescricao( rs.getString("desc") );
+			Modelo modelo = daoModelo.getPorId( rs.getInt("ID_MODELO") );
 			v.setModelo( modelo );
 			
 			return v;

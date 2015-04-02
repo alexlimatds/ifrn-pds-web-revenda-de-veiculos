@@ -1,4 +1,3 @@
 /dao
-/dominio
 /web
-/applicationContext.xml
+/dominio

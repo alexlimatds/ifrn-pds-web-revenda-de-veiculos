@@ -25,3 +25,9 @@ insert into MODELOS (ID, DESCRICAO, ID_FABRICANTE, ID_TIPO_VEICULO) values (4, '
 insert into MODELOS (ID, DESCRICAO, ID_FABRICANTE, ID_TIPO_VEICULO) values (5, 'PALIO', 2, 1);
 insert into MODELOS (ID, DESCRICAO, ID_FABRICANTE, ID_TIPO_VEICULO) values (6, 'PALIO WEEKEND', 2, 7);
 insert into MODELOS (ID, DESCRICAO, ID_FABRICANTE, ID_TIPO_VEICULO) values (7, 'TRACKER', 1, 4);
+
+create table VEICULOS (ID int auto_increment, ANO int not null, PLACA varchar(10) not null unique, 
+	CHASSI varchar(20), CILINDRADAS int, FOTO blob, MIME_TYPE_FOTO varchar(30), ID_MODELO int not null, 
+	primary key (ID), foreign key (ID_MODELO) references MODELOS);
+insert into VEICULOS (ID, ANO, PLACA, CILINDRADAS, ID_MODELO) values (1, 2010, 'MNT1020', 1000, 5);
+insert into VEICULOS (ID, ANO, PLACA, CILINDRADAS, ID_MODELO) values (2, 2014, 'MSX5016', 1600, 3);

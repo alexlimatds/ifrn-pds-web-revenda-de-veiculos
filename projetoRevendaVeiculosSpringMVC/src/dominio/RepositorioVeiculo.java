@@ -6,8 +6,12 @@ import java.util.List;
 
 public interface RepositorioVeiculo{
 	
+	public final String PLACA="PLACA";
+	public final String ANO="ANO";
+	public final String ID_MODELO="ID_MODELO";
+	
 	/**
-	 * @param obj
+	 * @param v
 	 * @return o id gerado para o veículo.
 	 */
 	public Integer inserir(Veiculo v);
@@ -17,8 +21,16 @@ public interface RepositorioVeiculo{
 	public void excluir(Integer id);
 	
 	public List<Veiculo> todos();
-
-	public Veiculo getPorPlaca(String placa);
+	
+	/**
+	 * Realizar uma busca por determinado campo.
+	 * @param campo uma das constantes desta interface.
+	 * @param valor
+	 * @return
+	 */
+	public List<Veiculo> getPor(String campo, Object valor);
+	
+	public Veiculo getPorId(Integer id);
 	
 	/**
 	 * Retorna as datas de última venda e última compra deste veículo.
@@ -28,6 +40,4 @@ public interface RepositorioVeiculo{
 	 * 			(quando não houver última venda, o segundo elemento será nulo).
 	 */
 	public Date[] getDatasUltimasTransacoes(Integer idVeiculo);
-	
-	public Veiculo getPorId(Integer id);
 }

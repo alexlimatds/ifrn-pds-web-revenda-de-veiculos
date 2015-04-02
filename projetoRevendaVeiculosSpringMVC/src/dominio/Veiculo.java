@@ -1,26 +1,37 @@
 package dominio;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 /**
  * Representa um veículo comercializado pela loja.
  */
 public class Veiculo extends Entidade {
-
-	private int anoFabricacao;
+	
+	@Min(1900)
+	@NotNull
+	private Integer anoFabricacao;
+	@Pattern(regexp="[A-Z]{3}\\d{4}")
+	@NotNull
 	private String placa;
 	private String chassi;
 	private byte[] foto;
-	private int cilindradas;
+	private String mimeTypeFoto;
+	@Min(50)
+	private Integer cilindradas;
+	@NotNull
 	private Modelo modelo;
 
 	public Veiculo() {
 		super();
 	}
 	
-	public int getAnoFabricacao() {
+	public Integer getAnoFabricacao() {
 		return anoFabricacao;
 	}
 
-	public void setAnoFabricacao(int anoFabricacao) {
+	public void setAnoFabricacao(Integer anoFabricacao) {
 		this.anoFabricacao = anoFabricacao;
 	}
 
@@ -48,11 +59,19 @@ public class Veiculo extends Entidade {
 		this.foto = foto;
 	}
 
-	public int getCilindradas() {
+	public String getMimeTypeFoto() {
+		return mimeTypeFoto;
+	}
+
+	public void setMimeTypeFoto(String mimeTypeFoto) {
+		this.mimeTypeFoto = mimeTypeFoto;
+	}
+
+	public Integer getCilindradas() {
 		return cilindradas;
 	}
 
-	public void setCilindradas(int cilindradas) {
+	public void setCilindradas(Integer cilindradas) {
 		this.cilindradas = cilindradas;
 	}
 

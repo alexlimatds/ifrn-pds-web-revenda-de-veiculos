@@ -98,6 +98,7 @@ public class CRUDModelo {
 		return json;
 	}
 	
+	//Para a requisição Ajax de atualização de tabela
 	@RequestMapping("/modelos")
 	public String modelos(Model model){
 		List<Modelo> modelos = repositorioModelo.todos();
