@@ -6,6 +6,9 @@
 <head>
   <title>Veículos</title>
   <c:url var="actionUrl" value="/veiculos"/>
+  <c:url var="resources" value="/resources"/>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/css/select2.min.css" rel="stylesheet" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/js/select2.min.js"></script>
   <script>
   	$(document).ready(function(){
   	  $(document).ajaxError(function(event, jqxhr, settings){
@@ -18,6 +21,7 @@
   	  $('#btnBuscar').click(buscar);
   	  $('#selectCampo').change(atualizarCampos);
   	  atualizarCampos();
+  	  $('#selectModelo').select2();
   	});
   	function atualizarCampos(){
   	  var modelo = ($('#selectCampo').val() === 'ID_MODELO');
@@ -89,7 +93,9 @@
             <label for="modelo">MODELO</label>
             <select name="valor" id="selectModelo" class="form-control">
               <c:forEach var="m" items="${modelos}">
-                <option value="${m.id}">${m.descricao}</option>
+                <option value="${m.id}">
+                  ${m.descricao} (${m.tipo.descricao}) - ${m.fabricante.descricao}
+                </option>
               </c:forEach>
             </select>
           </div>

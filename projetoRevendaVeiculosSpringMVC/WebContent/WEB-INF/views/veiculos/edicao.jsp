@@ -6,6 +6,14 @@
 <html lang="pt">
 <head>
   <title>${titulo}</title>
+  <c:url var="resources" value="/resources"/>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/css/select2.min.css" rel="stylesheet" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/js/select2.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    $('#selectModelo').select2();
+  });
+  </script>
 </head>
 <body>
   <div class="container">
@@ -14,12 +22,15 @@
     <form:form action="${actionUrl}" method="post" role="form" 
                modelAttribute="veiculo" enctype="multipart/form-data">
       <div class="form-group">
-        <label for="modelo.id">MODELO</label>
+        <label for="selectModelo">MODELO</label>
         <form:select path="modelo.id" 
-                     items="${modelos}" 
-                     itemLabel="descricao" 
-                     itemValue="id" 
-                     class="form-control"/>
+                     id="selectModelo" 
+                     class="form-control">
+         <c:forEach var="m" items="${modelos}">
+           <form:option value="${m.id}" 
+             label="${m.descricao} (${m.tipo.descricao}) - ${m.fabricante.descricao}"/>
+         </c:forEach>
+       </form:select>
         <form:errors path="modelo.id" cssStyle="color: red"/>
       </div>
       
@@ -49,7 +60,7 @@
       
       <div class="form-group">
         <label for="arquivoFoto">FOTO</label>
-        <input type="file" name="arquivoFoto" class="form-control"/>
+        <input type="file" name="arquivoFoto" accept="image/*" class="form-control"/>
       </div>
       
       <form:hidden path="id"/>
