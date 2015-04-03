@@ -13,8 +13,11 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import dominio.Foto;
 import dominio.Modelo;
 import dominio.RepositorioVeiculo;
 import dominio.Veiculo;
@@ -27,7 +30,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	@Autowired
 	private DAOModelo daoModelo;
 	private final String selectQuery = "select ID, " +
-			"ANO, CHASSI, PLACA, FOTO, CILINDRADAS, " +
+			"ANO, CHASSI, PLACA, CILINDRADAS, " +
 			"ID_MODELO, MIME_TYPE_FOTO " +
 			"from VEICULOS"; 
 	
@@ -43,7 +46,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 			prep.setObject(3, v.getCilindradas());
 			prep.setString(4, v.getChassi());
 			if(v.getFoto() != null){
-				prep.setBinaryStream(5, new ByteArrayInputStream(v.getFoto()));
+				prep.setBinaryStream(5, new ByteArrayInputStream(v.getFoto().getBytes()));
 				prep.setString(6, v.getMimeTypeFoto());
 			}
 			else{
@@ -67,31 +70,28 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	}
 
 	@Override
-	public void atualizar(Veiculo v) {
-		try{
-			Connection con = dataSource.getConnection();
-			PreparedStatement prep = con.prepareStatement("update VEICULOS " +
-					"set ANO=?, PLACA=?, CHASSI=?, CILINDRADAS=?, FOTO=?, MIME_TYPE_FOTO=?, "
-					+ "ID_MODELO=? where ID=?");
-			prep.setInt(1, v.getAnoFabricacao());
-			prep.setString(2, v.getPlaca());
-			prep.setString(3, v.getChassi());
-			prep.setObject(4, v.getCilindradas());
-			if(v.getFoto() != null){
-				prep.setBinaryStream(5, new ByteArrayInputStream(v.getFoto()));
-				prep.setString(6, v.getMimeTypeFoto());
-			}
-			else{
-				prep.setObject(5, null);
-				prep.setString(6, null);
-			}
-			prep.setInt(7, v.getModelo().getId());
-			prep.setInt(8, v.getId());
-			prep.executeUpdate();
-		}catch(SQLException ex){
-			ex.printStackTrace();
-			throw new RuntimeException(ex);
+	public void atualizar(Veiculo v, Foto novaFoto) {
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		paramSource.addValue("ano", v.getAnoFabricacao());
+		paramSource.addValue("placa", v.getPlaca());
+		paramSource.addValue("chassi", v.getChassi());
+		paramSource.addValue("cilindradas", v.getCilindradas());
+		paramSource.addValue("idModelo", v.getModelo().getId());
+		paramSource.addValue("id", v.getId());
+		String update = null;
+		if(novaFoto != null){
+			update = "update VEICULOS set ANO=:ano, PLACA=:placa, CHASSI=:chassi, "
+					+ "CILINDRADAS=:cilindradas, FOTO=:foto, MIME_TYPE_FOTO=:mime, "
+					+ "ID_MODELO=:idModelo where ID=:id";
+			paramSource.addValue("foto", novaFoto.getBytes());
+			paramSource.addValue("mime", novaFoto.getMimeType());
 		}
+		else{
+			update = "update VEICULOS set ANO=:ano, PLACA=:placa, CHASSI=:chassi, "
+					+ "CILINDRADAS=:cilindradas, ID_MODELO=:idModelo where ID=:id";
+		}
+		jdbcTemplate.update(update, paramSource);
 	}
 
 	@Override
@@ -188,7 +188,32 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	}
 	
 	/**
+	 * Retorna a foto, como mime type e bytes, cadastrada para um 
+	 * determinado veículo.
+	 */
+	public Foto getFoto(Integer idVeiculo){
+		try{
+			Connection con = dataSource.getConnection();
+			String select = "select FOTO, MIME_TYPE_FOTO from VEICULOS where ID=?";
+			PreparedStatement prep = con.prepareStatement(select);
+			prep.setObject(1, idVeiculo);
+			ResultSet rs = prep.executeQuery();
+			Foto foto = null;
+			if(rs.next()){
+				byte[] bytes = rs.getBytes("FOTO");
+				String mimeType = rs.getString("MIME_TYPE_FOTO");
+				foto = new Foto(bytes, mimeType);
+			}
+			return foto;
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	/**
 	 * Cria uma instância de Veiculo a partir de um registro apontado por um ResultSet.
+	 * Note que os bytes da foto nunca são recuperados através deste método.
 	 * @param rs ResultSet já apontando para o registro.
 	 * @return
 	 */
@@ -198,9 +223,12 @@ public class DAOVeiculo implements RepositorioVeiculo{
 			v.setId( rs.getInt("ID") );
 			v.setAnoFabricacao( rs.getInt("ANO") );
 			v.setChassi( rs.getString("CHASSI") );
-			v.setCilindradas( rs.getInt("CILINDRADAS") );
-			v.setFoto( rs.getBytes("FOTO") );
-			v.setMimeTypeFoto( rs.getString("MIME_TYPE_FOTO") );
+			v.setCilindradas( (Integer) rs.getObject("CILINDRADAS") );
+			String mimeType = rs.getString("MIME_TYPE_FOTO");
+			if(mimeType != null){
+				Foto foto = new Foto(null, mimeType);
+				v.setFoto(foto);
+			}
 			v.setPlaca( rs.getString("PLACA") );
 			
 			Modelo modelo = daoModelo.getPorId( rs.getInt("ID_MODELO") );

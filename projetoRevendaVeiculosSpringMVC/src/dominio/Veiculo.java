@@ -16,8 +16,7 @@ public class Veiculo extends Entidade {
 	@NotNull
 	private String placa;
 	private String chassi;
-	private byte[] foto;
-	private String mimeTypeFoto;
+	private Foto foto;
 	@Min(50)
 	private Integer cilindradas;
 	@NotNull
@@ -51,20 +50,18 @@ public class Veiculo extends Entidade {
 		this.chassi = chassi;
 	}
 
-	public byte[] getFoto() {
+	public Foto getFoto() {
 		return foto;
 	}
 
-	public void setFoto(byte[] foto) {
+	public void setFoto(Foto foto) {
 		this.foto = foto;
 	}
 
 	public String getMimeTypeFoto() {
-		return mimeTypeFoto;
-	}
-
-	public void setMimeTypeFoto(String mimeTypeFoto) {
-		this.mimeTypeFoto = mimeTypeFoto;
+		if(foto != null)
+			return foto.getMimeType();
+		return null;
 	}
 
 	public Integer getCilindradas() {

@@ -16,7 +16,7 @@ public interface RepositorioVeiculo{
 	 */
 	public Integer inserir(Veiculo v);
 	
-	public void atualizar(Veiculo v);
+	public void atualizar(Veiculo v, Foto novaFoto);
 	
 	public void excluir(Integer id);
 	
@@ -40,4 +40,6 @@ public interface RepositorioVeiculo{
 	 * 			(quando não houver última venda, o segundo elemento será nulo).
 	 */
 	public Date[] getDatasUltimasTransacoes(Integer idVeiculo);
+	
+	public Foto getFoto(Integer idVeiculo);
 }

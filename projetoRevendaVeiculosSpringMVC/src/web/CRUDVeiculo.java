@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dominio.Foto;
 import dominio.Modelo;
 import dominio.RepositorioModelo;
 import dominio.RepositorioVeiculo;
@@ -75,19 +76,18 @@ public class CRUDVeiculo {
 		}
 		
 		try{
-			if(arquivoFoto != null){
-				veiculo.setFoto(arquivoFoto.getBytes());
-				veiculo.setMimeTypeFoto(arquivoFoto.getContentType());
+			Foto novaFoto = null;
+			if(!arquivoFoto.isEmpty()){
+				byte[] bytes = arquivoFoto.getBytes();
+				String mimeType = arquivoFoto.getContentType();
+				novaFoto = new Foto(bytes, mimeType);
 			}
-			if(veiculo.getId() == null)
+			if(veiculo.getId() == null){
+				veiculo.setFoto(novaFoto);
 				repositorioVeiculo.inserir(veiculo);
+			}
 			else{
-				if(arquivoFoto == null){
-					Veiculo doBanco = repositorioVeiculo.getPorId(veiculo.getId());
-					veiculo.setFoto(doBanco.getFoto());
-					veiculo.setMimeTypeFoto(doBanco.getMimeTypeFoto());
-				}
-				repositorioVeiculo.atualizar(veiculo);
+				repositorioVeiculo.atualizar(veiculo, novaFoto);
 			}
 			rAttrs.addFlashAttribute("mensagem", "Veículo salvo com sucesso.");
 		}catch(Exception ex){
@@ -127,11 +127,11 @@ public class CRUDVeiculo {
 	
 	@RequestMapping("/ajax_foto")
 	public ResponseEntity<byte[]> foto(@RequestParam("id") Integer idVeiculo){
-		Veiculo veiculo = repositorioVeiculo.getPorId(idVeiculo);
+		Foto foto = repositorioVeiculo.getFoto(idVeiculo);
 		HttpHeaders headers = new HttpHeaders();
-		String[] tokens = veiculo.getMimeTypeFoto().split("/");
+		String[] tokens = foto.getMimeType().split("/");
 		MediaType mimeType = new MediaType(tokens[0], tokens[1]);
 		headers.setContentType(mimeType);
-		return new ResponseEntity<>(veiculo.getFoto(), headers, HttpStatus.OK);
+		return new ResponseEntity<>(foto.getBytes(), headers, HttpStatus.OK);
 	}
 }
