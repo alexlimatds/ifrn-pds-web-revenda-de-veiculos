@@ -2,9 +2,9 @@
 <decorators defaultdir="/WEB-INF/decorators">
 	<excludes>
 		<pattern>/resources/*</pattern>
-		<pattern>/fabricantes/*</pattern>
-		<pattern>/modelos/*</pattern>
-		<pattern>/tipos_veiculo/*</pattern>
+		<pattern>/fabricantes*</pattern>
+		<pattern>/modelos*</pattern>
+		<pattern>/tipos_veiculo*</pattern>
 		<pattern>*/ajax_*</pattern>
 	</excludes>
 	<decorator name="principal" page="principal.jsp">

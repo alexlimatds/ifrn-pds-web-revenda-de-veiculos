@@ -17,6 +17,7 @@
   <decorator:head />
 </head>
 <body>
+  <c:import url="/WEB-INF/views/navegacao.jsp" />
   <decorator:body />
 </body>
 </html>

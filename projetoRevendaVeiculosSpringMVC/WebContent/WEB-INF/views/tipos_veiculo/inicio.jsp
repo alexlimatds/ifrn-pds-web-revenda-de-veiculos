@@ -36,6 +36,7 @@
   </script>
 </head>
 <body>
+  <c:import url="/WEB-INF/views/navegacao.jsp" />
   <div class="container">
     <h2>Tipos de Veículo</h2>
     

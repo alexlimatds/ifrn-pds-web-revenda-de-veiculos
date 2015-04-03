@@ -12,6 +12,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </head>
 <body>
+  <c:import url="/WEB-INF/views/navegacao.jsp" />
   <div class="container">
     <h2>Fabricantes</h2>
     <c:set var="alertClass" value="${(!erro?'alert alert-success':'alert alert-danger')}"></c:set>

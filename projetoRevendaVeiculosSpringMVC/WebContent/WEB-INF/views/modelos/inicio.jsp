@@ -38,6 +38,7 @@
   </script>
 </head>
 <body>
+  <c:import url="/WEB-INF/views/navegacao.jsp" />
   <div class="container">
     <h2>Modelos</h2>
     
