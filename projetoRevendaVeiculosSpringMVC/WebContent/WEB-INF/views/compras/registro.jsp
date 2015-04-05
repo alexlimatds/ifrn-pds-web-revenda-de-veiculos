@@ -60,9 +60,34 @@
         </div>
         <div class="row">
           <div class="col-md-2">FOTO</div>
+          <div class="col-md-4">
+            <c:choose>
+              <c:when test="${not empty veiculo.foto}">
+                <a class="btn btn-default" title="Ver foto" onclick="$('#imageModal').modal({show:true})">
+                  <span class="glyphicon glyphicon-eye-open" ></span>
+                </a>
+              </c:when>
+              <c:otherwise>
+                <strong>SEM FOTO</strong>
+              </c:otherwise>
+            </c:choose>
+          </div>
         </div>
       </div>
     </div>
+    
+    <c:if test="${not empty veiculo.foto}">
+      <div id="imageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <c:url var="urlFoto" value="/veiculos/ajax_foto"/>
+              <img class="img-responsive" src="${urlFoto}?id=${veiculo.id}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </c:if>
     
     <div class="panel panel-default">
       <div class="panel-heading">Dados da compra</div>
