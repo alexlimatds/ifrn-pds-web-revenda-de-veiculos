@@ -1,5 +1,7 @@
 package dominio;
 
+import java.util.Date;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -24,6 +26,11 @@ public class Veiculo extends Entidade {
 
 	public Veiculo() {
 		super();
+	}
+	
+	public Veiculo(Integer id, String placa){
+		super(id);
+		this.placa = placa;
 	}
 	
 	public Integer getAnoFabricacao() {
@@ -84,10 +91,8 @@ public class Veiculo extends Entidade {
 	 * Retorna true caso o veículo esteja em posse da loja e false em caso contrário.
 	 * @return
 	 */
-	public boolean isEmPosseDaLoja() {
-		//TODO remover para algum service
-		/*final RepositorioVeiculo repositorio = new RepositorioVeiculo();
-		final Date[] datas = repositorio.getDatasUltimasTransacoes(id);
+	public boolean isEmPosseDaLoja(RepositorioVeiculo repositorio) {
+		final Date[] datas = repositorio.getDatasUltimasTransacoes(getId());
 		final Date dataCompra = datas[0];
 		final Date dataVenda = datas[1];
 		if(dataCompra == null){
@@ -101,7 +106,6 @@ public class Veiculo extends Entidade {
 		else{
 			//se dataCompra for posterior a dataVenda, veículo está em posse da loja
 			return dataCompra.getTime() > dataVenda.getTime();
-		}*/
-		return false;
+		}
 	}
 }

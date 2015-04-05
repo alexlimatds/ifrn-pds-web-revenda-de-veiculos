@@ -19,6 +19,19 @@
             <li><a href="${context}/fabricantes">Fabricantes</a></li>
           </ul>
         </li>
+        
+        <li class="dropdown">
+          <a href="#" 
+             class="dropdown-toggle" 
+             data-toggle="dropdown" 
+             role="button" 
+             aria-expanded="false">
+            TRANSAÇÕES <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="${context}/compras/iniciar">Iniciar compra</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>

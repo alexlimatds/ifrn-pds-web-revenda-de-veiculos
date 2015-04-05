@@ -147,11 +147,11 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	public Date[] getDatasUltimasTransacoes(Integer idVeiculo){
 		try{
 			Connection con = dataSource.getConnection();
-			PreparedStatement prep = con.prepareStatement("select placa as placa, " +
-					"max(c.data) as dcompra, max(ven.data) as dvenda " +
-					"from veiculos vei left join compras c on " +
-					"vei.id = c.idveiculo left join vendas ven on vei.id = ven.idveiculo " +
-					"where vei.id=?");
+			PreparedStatement prep = con.prepareStatement("select PLACA as placa, " +
+					"max(c.DATA) as dcompra, max(ven.DATA) as dvenda " +
+					"from VEICULOS vei left join COMPRAS c on vei.ID = c.ID_VEICULO " +
+					"left join VENDAS ven on vei.ID = ven.ID_VEICULO " +
+					"where vei.ID=?");
 			prep.setInt(1, idVeiculo);
 			ResultSet rs = prep.executeQuery();
 			if(rs.next()){
@@ -185,6 +185,13 @@ public class DAOVeiculo implements RepositorioVeiculo{
 			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		}
+	}
+	
+	public Veiculo getPorPlaca(String placa){
+		List<Veiculo> lista = getPor(PLACA, placa);
+		if(lista.isEmpty())
+			return null;
+		return lista.get(0);
 	}
 	
 	/**

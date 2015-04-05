@@ -31,3 +31,14 @@ create table VEICULOS (ID int auto_increment, ANO int not null, PLACA varchar(10
 	primary key (ID), foreign key (ID_MODELO) references MODELOS);
 insert into VEICULOS (ID, ANO, PLACA, CILINDRADAS, ID_MODELO) values (1, 2010, 'MNT1020', 1000, 5);
 insert into VEICULOS (ID, ANO, PLACA, CILINDRADAS, ID_MODELO) values (2, 2014, 'MSX5016', 1600, 3);
+insert into VEICULOS (ID, ANO, PLACA, CILINDRADAS, ID_MODELO) values (3, 2009, 'NOP0120', 1000, 5);
+insert into VEICULOS (ID, ANO, PLACA, CILINDRADAS, ID_MODELO) values (4, 2012, 'MXR1611', 1600, 3);
+
+create table COMPRAS (ID int auto_increment, DATA date not null, PRECO decimal(14,2) not null, OBS varchar, 
+	ID_VEICULO int not null, primary key (ID), foreign key (ID_VEICULO) references VEICULOS);
+insert into COMPRAS (ID, DATA, PRECO, ID_VEICULO) values (1, '2013-01-10', 16500.00, 3);
+insert into COMPRAS (ID, DATA, PRECO, ID_VEICULO) values (2, '2013-02-05', 19000.00, 4);
+
+--TODO: colunas vendedor e autorizador
+create table VENDAS (ID int auto_increment, DATA date not null, DESCONTO decimal (14,2) not null, 
+	COMISSAO decimal (4,2) not null, OBS varchar, STATUS int not null, ID_VEICULO int not null);

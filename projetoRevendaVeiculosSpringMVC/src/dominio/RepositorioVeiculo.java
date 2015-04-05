@@ -32,6 +32,8 @@ public interface RepositorioVeiculo{
 	
 	public Veiculo getPorId(Integer id);
 	
+	public Veiculo getPorPlaca(String placa);
+	
 	/**
 	 * Retorna as datas de última venda e última compra deste veículo.
 	 * @param idVeiculo

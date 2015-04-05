@@ -3,12 +3,22 @@ package dominio;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * Representa uma compra de veículo realizada pela loja.
  */
 public class Compra extends Entidade {
-	
+	@NotNull
+	@DateTimeFormat(pattern="ss/MM/yyyy")
 	private Date data;
+	@DecimalMin("0.00")
+	@NotNull
+	@NumberFormat(pattern="###,###.00")
 	private BigDecimal preco;
 	private String obs;
 	private Veiculo veiculo;
