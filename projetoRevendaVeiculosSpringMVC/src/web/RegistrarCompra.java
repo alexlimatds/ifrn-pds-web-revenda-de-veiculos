@@ -41,7 +41,7 @@ public class RegistrarCompra {
 			return inicio();
 		}
 		else{
-			if(veiculo.isEmPosseDaLoja(repositorioVeiculo)){
+			if(veiculo.isEmPosseDaLoja()){
 				model.addAttribute("erro", true);
 				model.addAttribute("mensagem", "O veículo já pertence à loja.");
 				return inicio();

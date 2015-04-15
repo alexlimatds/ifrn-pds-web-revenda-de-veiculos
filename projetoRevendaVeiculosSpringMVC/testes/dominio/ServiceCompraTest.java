@@ -28,7 +28,7 @@ public class ServiceCompraTest {
 		Integer idVeiculo = 108;
 		
 		Veiculo veiculo = Mockito.mock(Veiculo.class);
-		Mockito.when(veiculo.isEmPosseDaLoja(repoVeiculo)).thenReturn(true);
+		Mockito.when(veiculo.isEmPosseDaLoja()).thenReturn(true);
 		Mockito.when(repoVeiculo.getPorId(idVeiculo)).thenReturn(veiculo);
 		
 		service.registrar(compra, idVeiculo);
@@ -41,7 +41,7 @@ public class ServiceCompraTest {
 		Integer idVeiculo = 108;
 		
 		Veiculo veiculo = Mockito.mock(Veiculo.class);
-		Mockito.when(veiculo.isEmPosseDaLoja(repoVeiculo)).thenReturn(false);
+		Mockito.when(veiculo.isEmPosseDaLoja()).thenReturn(false);
 		Mockito.when(repoVeiculo.getPorId(idVeiculo)).thenReturn(veiculo);
 		
 		service.registrar(compra, idVeiculo);

@@ -23,7 +23,9 @@ public class Veiculo extends Entidade {
 	private Integer cilindradas;
 	@NotNull
 	private Modelo modelo;
-
+	
+	private RepositorioVeiculo repositorio;
+	
 	public Veiculo() {
 		super();
 	}
@@ -33,6 +35,10 @@ public class Veiculo extends Entidade {
 		this.placa = placa;
 	}
 	
+	public void setRepositorio(RepositorioVeiculo repositorio) {
+		this.repositorio = repositorio;
+	}
+
 	public Integer getAnoFabricacao() {
 		return anoFabricacao;
 	}
@@ -91,7 +97,7 @@ public class Veiculo extends Entidade {
 	 * Retorna true caso o veículo esteja em posse da loja e false em caso contrário.
 	 * @return
 	 */
-	public boolean isEmPosseDaLoja(RepositorioVeiculo repositorio) {
+	public boolean isEmPosseDaLoja() {
 		final Date[] datas = repositorio.getDatasUltimasTransacoes(getId());
 		final Date dataCompra = datas[0];
 		final Date dataVenda = datas[1];

@@ -24,8 +24,9 @@ public class VeiculoTest {
 		Date[] datas = new Date[]{dataCompra, dataVenda};
 		RepositorioVeiculo repositorio = Mockito.mock(RepositorioVeiculo.class);
 		Mockito.when(repositorio.getDatasUltimasTransacoes(idVeiculo)).thenReturn(datas);
+		veiculo.setRepositorio(repositorio);
 		
-		assertFalse( veiculo.isEmPosseDaLoja(repositorio) );
+		assertFalse( veiculo.isEmPosseDaLoja() );
 	}
 	
 	@Test
@@ -39,8 +40,9 @@ public class VeiculoTest {
 		Date[] datas = new Date[]{dataCompra, dataVenda};
 		RepositorioVeiculo repositorio = Mockito.mock(RepositorioVeiculo.class);
 		Mockito.when(repositorio.getDatasUltimasTransacoes(idVeiculo)).thenReturn(datas);
+		veiculo.setRepositorio(repositorio);
 		
-		assertTrue( veiculo.isEmPosseDaLoja(repositorio) );
+		assertTrue( veiculo.isEmPosseDaLoja() );
 	}
 	
 	@Test
@@ -54,8 +56,9 @@ public class VeiculoTest {
 		Date[] datas = new Date[]{dataCompra, dataVenda};
 		RepositorioVeiculo repositorio = Mockito.mock(RepositorioVeiculo.class);
 		Mockito.when(repositorio.getDatasUltimasTransacoes(idVeiculo)).thenReturn(datas);
+		veiculo.setRepositorio(repositorio);
 		
-		assertFalse( veiculo.isEmPosseDaLoja(repositorio) );
+		assertFalse( veiculo.isEmPosseDaLoja() );
 	}
 	
 	@Test
@@ -69,7 +72,8 @@ public class VeiculoTest {
 		Date[] datas = new Date[]{dataCompra, dataVenda};
 		RepositorioVeiculo repositorio = Mockito.mock(RepositorioVeiculo.class);
 		Mockito.when(repositorio.getDatasUltimasTransacoes(idVeiculo)).thenReturn(datas);
+		veiculo.setRepositorio(repositorio);
 		
-		assertTrue( veiculo.isEmPosseDaLoja(repositorio) );
+		assertTrue( veiculo.isEmPosseDaLoja() );
 	}
 }

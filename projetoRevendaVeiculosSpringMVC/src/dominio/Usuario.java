@@ -1,20 +1,33 @@
 package dominio;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * Representa um usuário do sistema.
  */
 public class Usuario extends Entidade{
 	
+	@NotNull
+	@NotEmpty
 	private String nome;
+	@Pattern(regexp="\\d{11}")
 	private String cpf;
 	private String telefone;
+	@NotNull
+	@NotEmpty
 	private String login;
+	@NotNull
+	@NotEmpty
 	private String senha;
-	private boolean ativo;
-	private boolean gerente;
+	@NotNull
+	private Boolean ativo;
+	@NotNull
+	private Boolean gerente;
 	
 	public Usuario(){
-		super();
 	}
 
 	public String getNome() {
@@ -57,19 +70,19 @@ public class Usuario extends Entidade{
 		this.senha = senha;
 	}
 
-	public boolean isAtivo() {
+	public Boolean isAtivo() {
 		return ativo;
 	}
 
-	public void setAtivo(boolean ativo) {
+	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
 
-	public boolean isGerente() {
+	public Boolean isGerente() {
 		return gerente;
 	}
 
-	public void setGerente(boolean gerente) {
+	public void setGerente(Boolean gerente) {
 		this.gerente = gerente;
 	}
 }

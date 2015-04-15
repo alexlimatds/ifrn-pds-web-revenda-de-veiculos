@@ -240,6 +240,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 			
 			Modelo modelo = daoModelo.getPorId( rs.getInt("ID_MODELO") );
 			v.setModelo( modelo );
+			v.setRepositorio(this);
 			
 			return v;
 		}catch(SQLException ex){
