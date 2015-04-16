@@ -1,9 +1,9 @@
 create table USUARIOS (ID int auto_increment, NOME varchar(40) not null, CPF varchar(15), 
 	TELEFONE varchar(12), LOGIN varchar(15) not null unique, SENHA varchar(15) not null, 
-	ATIVO boolean not null, GERENTE boolean not null);
+	ATIVO boolean not null, GERENTE boolean not null, primary key (ID));
 insert into USUARIOS (ID, NOME, LOGIN, SENHA, ATIVO, GERENTE) values (1, 'JOSÉ ANTÔNIO', 'barao', 
 	'senha', true, true);
-insert into USUARIOS (ID, NOME, LOGIN, SENHA, ATIVO, GERENTE) values (1, 'LUCENA', 'lucena', 
+insert into USUARIOS (ID, NOME, LOGIN, SENHA, ATIVO, GERENTE) values (2, 'LUCENA', 'lucena', 
 	'senha', true, false);
 
 create table FABRICANTES (ID int auto_increment, DESCRICAO varchar(40) unique not null, primary key(ID));
@@ -47,6 +47,6 @@ create table COMPRAS (ID int auto_increment, DATA date not null, PRECO decimal(1
 insert into COMPRAS (ID, DATA, PRECO, ID_VEICULO) values (1, '2013-01-10', 16500.00, 3);
 insert into COMPRAS (ID, DATA, PRECO, ID_VEICULO) values (2, '2013-02-05', 19000.00, 4);
 
---TODO: colunas vendedor e autorizador
 create table VENDAS (ID int auto_increment, DATA date not null, DESCONTO decimal (14,2) not null, 
-	COMISSAO decimal (4,2) not null, OBS varchar, STATUS int not null, ID_VEICULO int not null);
+	COMISSAO decimal (4,2) not null, OBS varchar, STATUS int not null, ID_VEICULO int not null, 
+	ID_VENDEDOR int not null, ID_AUTORIZADOR int not null);

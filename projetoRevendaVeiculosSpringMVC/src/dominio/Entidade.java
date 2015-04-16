@@ -1,5 +1,7 @@
 package dominio;
 
+import java.io.Serializable;
+
 /**
  * Entidade genérica que define o atributo id e os métodos equals e hashCode. 
  * As entidades do sistema podem herdar desta classe para evitar a escrita destes 
@@ -7,7 +9,7 @@ package dominio;
  * 
  * @author Alexandre
  */
-public abstract class Entidade {
+public abstract class Entidade implements Serializable{
 	
 	private Integer id;
 	

@@ -5,20 +5,34 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Representa uma venda de veículo realizada pela loja.
  *
  */
 public class Venda extends Entidade{
 	
+	@NotNull
 	private Date data;
+	@NotNull
+	@DecimalMin("0.00")
 	private BigDecimal desconto;
-	private double comissao; //em percentual
+	@NotNull
+	@DecimalMin("0.00")
+	private BigDecimal comissao; //em percentual
 	private String obs;
+	@NotNull
 	private StatusVenda status;
+	@NotNull
 	private Veiculo veiculo;
+	@NotNull
 	private Usuario vendedor;
+	@NotNull
 	private Usuario autorizador;
+	@Size(min=1)
 	private List<PartePagamento> partesPagamento = new ArrayList<PartePagamento>();
 	
 	public Date getData() {
@@ -37,11 +51,11 @@ public class Venda extends Entidade{
 		this.desconto = desconto;
 	}
 
-	public double getComissao() {
+	public BigDecimal getComissao() {
 		return comissao;
 	}
 
-	public void setComissao(double comissao) {
+	public void setComissao(BigDecimal comissao) {
 		this.comissao = comissao;
 	}
 
