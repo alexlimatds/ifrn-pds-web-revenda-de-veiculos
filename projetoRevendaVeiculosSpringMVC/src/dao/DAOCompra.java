@@ -59,4 +59,34 @@ public class DAOCompra implements RepositorioCompra{
 		}
 	}
 
+	@Override
+	public Compra getUltimaCompraDoVeiculo(Integer idVeiculo) {
+		try{
+			Connection con = dataSource.getConnection();
+			String query = "select * from COMPRAS where ID_VEICULO=? and "
+					+ "DATA=(select max(DATA) from COMPRAS where ID_VEICULO=?)";
+			PreparedStatement prep = con.prepareStatement(query);
+			prep.setInt(1, idVeiculo);
+			prep.setInt(2, idVeiculo);
+			ResultSet rs = prep.executeQuery();
+			Compra ultimaCompra = null;
+			if(rs.next())
+				ultimaCompra = montarCompra(rs);
+			rs.close();
+			prep.close();
+			return ultimaCompra;
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	private Compra montarCompra(ResultSet rs) throws SQLException{
+		Compra c = new Compra();
+		c.setData(rs.getDate("DATA"));
+		c.setId(rs.getInt("ID"));
+		c.setObs(rs.getString("OBS"));
+		c.setPreco(rs.getBigDecimal("PRECO"));
+		return c;
+	}
 }

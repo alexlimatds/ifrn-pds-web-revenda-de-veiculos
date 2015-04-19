@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import dominio.Compra;
 import dominio.RepositorioVeiculo;
 import dominio.ServiceCompra;
+import dominio.StatusVeiculo;
 import dominio.Veiculo;
 
 @Controller
@@ -41,7 +42,7 @@ public class RegistrarCompra {
 			return inicio();
 		}
 		else{
-			if(veiculo.isEmPosseDaLoja()){
+			if(veiculo.getStatus() != StatusVeiculo.DISPONIVEL_PARA_VENDA){
 				model.addAttribute("erro", true);
 				model.addAttribute("mensagem", "O veículo já pertence à loja.");
 				return inicio();

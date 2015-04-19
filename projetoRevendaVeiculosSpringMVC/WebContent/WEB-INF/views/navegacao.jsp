@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<c:set var="context" value="${pageContext.request.contextPath}" />
+<c:set var="context" value="${pageContext.request.contextPath}"/>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -38,8 +38,11 @@
         
         <li>
           <a href="${context}/j_spring_security_logout">SAIR</a>
-        </li>
+        </li>        
       </ul>
+      <p class="navbar-text navbar-right">
+        <strong><sec:authentication property="details.nome"/></strong>
+      </p>
     </div>
   </div>
 </nav>

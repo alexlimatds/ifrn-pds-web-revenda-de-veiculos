@@ -1,7 +1,5 @@
 package dominio;
 
-import java.util.Date;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -24,7 +22,8 @@ public class Veiculo extends Entidade {
 	@NotNull
 	private Modelo modelo;
 	
-	private RepositorioVeiculo repositorio;
+	private RepositorioCompra repositorioCompra;
+	private RepositorioVenda repositorioVenda;
 	
 	public Veiculo() {
 		super();
@@ -35,8 +34,12 @@ public class Veiculo extends Entidade {
 		this.placa = placa;
 	}
 	
-	public void setRepositorio(RepositorioVeiculo repositorio) {
-		this.repositorio = repositorio;
+	public void setRepositorioCompra(RepositorioCompra repositorioCompra) {
+		this.repositorioCompra = repositorioCompra;
+	}
+
+	public void setRepositorioVenda(RepositorioVenda repositorioVenda) {
+		this.repositorioVenda = repositorioVenda;
 	}
 
 	public Integer getAnoFabricacao() {
@@ -92,26 +95,32 @@ public class Veiculo extends Entidade {
 	public void setModelo(Modelo modelo) {
 		this.modelo = modelo;
 	}
-
+	
 	/**
-	 * Retorna true caso o veículo esteja em posse da loja e false em caso contrário.
+	 * Indica o status do veículo. Este status é determinado pelas transações 
+	 * realizadas com o veículo.
+	 * 
 	 * @return
 	 */
-	public boolean isEmPosseDaLoja() {
-		final Date[] datas = repositorio.getDatasUltimasTransacoes(getId());
-		final Date dataCompra = datas[0];
-		final Date dataVenda = datas[1];
-		if(dataCompra == null){
-			//veículo nunca foi comprado pela loja, portanto não está em posse da loja
-			return false;
+	public StatusVeiculo getStatus(){
+		Compra ultimaCompra = repositorioCompra.getUltimaCompraDoVeiculo(getId());
+		Venda ultimaVenda = repositorioVenda.getUltimaVendaDoVeiculo(getId());
+		if(ultimaCompra == null && ultimaVenda == null)
+			return StatusVeiculo.NAO_PERTENCE_A_LOJA;
+		if(ultimaCompra != null && ultimaVenda == null)
+			return StatusVeiculo.DISPONIVEL_PARA_VENDA;
+		if(ultimaCompra != null && ultimaVenda != null){
+			if(ultimaVenda.getStatus() == StatusVenda.FINALIZADA){
+				if(ultimaVenda.getData().after(ultimaCompra.getData()))
+					return StatusVeiculo.NAO_PERTENCE_A_LOJA;
+				else
+					return StatusVeiculo.DISPONIVEL_PARA_VENDA;
+			}
+			else{
+				return StatusVeiculo.EM_PROCESSO_DE_VENDA;
+			}
 		}
-		else if(dataVenda == null){
-			//veículo foi comprado pela loja mas não foi vendido
-			return true;
-		}
-		else{
-			//se dataCompra for posterior a dataVenda, veículo está em posse da loja
-			return dataCompra.getTime() > dataVenda.getTime();
-		}
+		
+		throw new IllegalStateException("Situação não prevista");
 	}
 }

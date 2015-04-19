@@ -7,8 +7,8 @@
   <title>Veículos</title>
   <c:url var="actionUrl" value="/veiculos"/>
   <c:url var="resources" value="/resources"/>
-  <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/css/select2.min.css" rel="stylesheet" />
-  <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/js/select2.min.js"></script>
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/css/select2.min.css" rel="stylesheet" />
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/js/select2.min.js"></script>
   <script>
   	$(document).ready(function(){
   	  $(document).ajaxError(function(event, jqxhr, settings){

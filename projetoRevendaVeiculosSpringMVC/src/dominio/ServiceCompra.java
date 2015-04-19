@@ -21,9 +21,9 @@ public class ServiceCompra {
 	
 	public Integer registrar(Compra c, Integer idVeiculo) {
 		//A compra somente pode ser registrada caso o veículo não 
-		//esteja em posse da loja.
+		//pertença à loja.
 		Veiculo v = repositorioVeiculo.getPorId(idVeiculo);
-		if(!v.isEmPosseDaLoja()){
+		if(v.getStatus() == StatusVeiculo.NAO_PERTENCE_A_LOJA){
 			c.setVeiculo(v);
 			return repositorioCompra.inserir(c);
 		}

@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -19,7 +18,9 @@ import org.springframework.stereotype.Repository;
 
 import dominio.Foto;
 import dominio.Modelo;
+import dominio.RepositorioCompra;
 import dominio.RepositorioVeiculo;
+import dominio.RepositorioVenda;
 import dominio.Veiculo;
 
 @Repository
@@ -29,6 +30,10 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	private DataSource dataSource;
 	@Autowired
 	private DAOModelo daoModelo;
+	@Autowired
+	private RepositorioCompra repositorioCompra;
+	@Autowired
+	private RepositorioVenda repositorioVenda;
 	private final String selectQuery = "select ID, " +
 			"ANO, CHASSI, PLACA, CILINDRADAS, " +
 			"ID_MODELO, MIME_TYPE_FOTO " +
@@ -144,32 +149,6 @@ public class DAOVeiculo implements RepositorioVeiculo{
 		}
 	}
 	
-	public Date[] getDatasUltimasTransacoes(Integer idVeiculo){
-		try{
-			Connection con = dataSource.getConnection();
-			PreparedStatement prep = con.prepareStatement("select PLACA as placa, " +
-					"max(c.DATA) as dcompra, max(ven.DATA) as dvenda " +
-					"from VEICULOS vei left join COMPRAS c on vei.ID = c.ID_VEICULO " +
-					"left join VENDAS ven on vei.ID = ven.ID_VEICULO " +
-					"where vei.ID=?");
-			prep.setInt(1, idVeiculo);
-			ResultSet rs = prep.executeQuery();
-			if(rs.next()){
-				Date[] datas = new Date[2];
-				datas[0] = rs.getDate("dcompra");
-				datas[1] = rs.getDate("dvenda");
-				
-				return datas;
-			}
-			else{ //não há veículo com o id informado
-				return null;
-			}
-		}catch(SQLException ex){
-			ex.printStackTrace();
-			throw new RuntimeException(ex);
-		}
-	}
-	
 	public List<Veiculo> getPor(String campo, Object valor){
 		try{
 			Connection con = dataSource.getConnection();
@@ -240,7 +219,8 @@ public class DAOVeiculo implements RepositorioVeiculo{
 			
 			Modelo modelo = daoModelo.getPorId( rs.getInt("ID_MODELO") );
 			v.setModelo( modelo );
-			v.setRepositorio(this);
+			v.setRepositorioCompra(repositorioCompra);
+			v.setRepositorioVenda(repositorioVenda);
 			
 			return v;
 		}catch(SQLException ex){

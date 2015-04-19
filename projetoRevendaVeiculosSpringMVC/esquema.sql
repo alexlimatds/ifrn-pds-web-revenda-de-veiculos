@@ -49,4 +49,6 @@ insert into COMPRAS (ID, DATA, PRECO, ID_VEICULO) values (2, '2013-02-05', 19000
 
 create table VENDAS (ID int auto_increment, DATA date not null, DESCONTO decimal (14,2) not null, 
 	COMISSAO decimal (4,2) not null, OBS varchar, STATUS int not null, ID_VEICULO int not null, 
-	ID_VENDEDOR int not null, ID_AUTORIZADOR int not null);
+	ID_VENDEDOR int not null, ID_AUTORIZADOR int);
+insert into VENDAS (ID, DATA, DESCONTO, COMISSAO, STATUS, ID_VEICULO, ID_VENDEDOR, ID_AUTORIZADOR) 
+	values (1, '2013-02-21', 0.00, 3.0, 3, 3, 2, 1);

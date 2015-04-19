@@ -8,6 +8,7 @@
   <meta charset="iso-8859-1">
   <title><decorator:title /></title>
   <c:import url="/WEB-INF/views/estilos_e_scripts.jsp" />
+  <decorator:head />
 </head>
 <body>
   <c:import url="/WEB-INF/views/navegacao.jsp" />

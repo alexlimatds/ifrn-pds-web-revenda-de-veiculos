@@ -6,4 +6,5 @@ public interface RepositorioCompra{
 	
 	public void excluir(Integer id);
 	
+	public Compra getUltimaCompraDoVeiculo(Integer idVeiculo);
 }
