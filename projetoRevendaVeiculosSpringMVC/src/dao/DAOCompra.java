@@ -1,5 +1,6 @@
 package dao;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +17,7 @@ import dominio.Compra;
 import dominio.RepositorioCompra;
 
 @Repository
-public class DAOCompra implements RepositorioCompra{
+public class DAOCompra implements RepositorioCompra, Serializable{
 	
 	@Autowired
 	private DataSource dataSource;

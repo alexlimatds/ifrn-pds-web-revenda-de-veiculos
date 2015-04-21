@@ -2,9 +2,18 @@ package dominio;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.NumberFormat;
+
 public class PartePagamento extends Entidade {
 	
+	@NotNull
+	@DecimalMin("0.00")
+	@NumberFormat(pattern="###,###.00")
 	private BigDecimal quantia;
+	@NotNull
 	private FormaDePagamento formaPagamento;
 	private Venda venda;
 	private Compra compraRelacionada;

@@ -49,6 +49,21 @@ insert into COMPRAS (ID, DATA, PRECO, ID_VEICULO) values (2, '2013-02-05', 19000
 
 create table VENDAS (ID int auto_increment, DATA date not null, DESCONTO decimal (14,2) not null, 
 	COMISSAO decimal (4,2) not null, OBS varchar, STATUS int not null, ID_VEICULO int not null, 
-	ID_VENDEDOR int not null, ID_AUTORIZADOR int);
+	ID_VENDEDOR int not null, ID_AUTORIZADOR int, primary key (ID), foreign key (ID_VEICULO) 
+	references VEICULOS, foreign key (ID_VENDEDOR) references USUARIOS, foreign key 
+	(ID_AUTORIZADOR) references USUARIOS);
 insert into VENDAS (ID, DATA, DESCONTO, COMISSAO, STATUS, ID_VEICULO, ID_VENDEDOR, ID_AUTORIZADOR) 
 	values (1, '2013-02-21', 0.00, 3.0, 3, 3, 2, 1);
+
+create table FORMAS_PAGAMENTO (ID int auto_increment, DESCRICAO varchar(30) not null unique, 
+	primary key (ID));
+insert into FORMAS_PAGAMENTO (ID, DESCRICAO) values (1, 'ESPÉCIE');
+insert into FORMAS_PAGAMENTO (ID, DESCRICAO) values (2, 'CHEQUE');
+insert into FORMAS_PAGAMENTO (ID, DESCRICAO) values (3, 'VEÍCULO');
+insert into FORMAS_PAGAMENTO (ID, DESCRICAO) values (4, 'DEPÓSITO BANCÁRIO');
+
+create table PARTES_PAGAMENTO (ID int auto_increment, QUANTIA decimal (14,2) not null, 
+	ID_FORMA_PAGAMENTO int not null, ID_VENDA int not null, primary key (ID), foreign key (ID_VENDA) 
+	references VENDAS, foreign key (ID_FORMA_PAGAMENTO) references FORMAS_PAGAMENTO);
+insert into PARTES_PAGAMENTO (ID, QUANTIA, ID_FORMA_PAGAMENTO, ID_VENDA) values 
+	(1, 20000, 2, 1);

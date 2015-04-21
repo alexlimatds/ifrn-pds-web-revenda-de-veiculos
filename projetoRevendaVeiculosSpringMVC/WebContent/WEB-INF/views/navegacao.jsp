@@ -33,6 +33,7 @@
           </a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="${context}/compras/iniciar">Iniciar compra</a></li>
+            <li><a href="${context}/vendas/iniciar">Iniciar venda</a></li>
           </ul>
         </li>
         

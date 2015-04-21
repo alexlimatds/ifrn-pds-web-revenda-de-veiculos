@@ -9,6 +9,9 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * Representa uma venda de veículo realizada pela loja.
  *
@@ -16,21 +19,19 @@ import javax.validation.constraints.Size;
 public class Venda extends Entidade{
 	
 	@NotNull
+	@DateTimeFormat(pattern="ss/MM/yyyy")
 	private Date data;
 	@NotNull
 	@DecimalMin("0.00")
+	@NumberFormat(pattern="###,##0.00")
 	private BigDecimal desconto;
-	@NotNull
 	@DecimalMin("0.00")
+	@NumberFormat(pattern="###,##0.00")
 	private BigDecimal comissao; //em percentual
 	private String obs;
-	@NotNull
 	private StatusVenda status;
-	@NotNull
 	private Veiculo veiculo;
-	@NotNull
 	private Usuario vendedor;
-	@NotNull
 	private Usuario autorizador;
 	@Size(min=1)
 	private List<PartePagamento> partesPagamento = new ArrayList<PartePagamento>();
