@@ -21,55 +21,8 @@
     <c:url var="actionUrl" value="/veiculos/salvar"/>
     <form:form action="${actionUrl}" method="post" role="form" 
                modelAttribute="veiculo" enctype="multipart/form-data">
-      <div class="form-group">
-        <label for="selectModelo">MODELO</label>
-        <form:select path="modelo.id" 
-                     id="selectModelo" 
-                     class="form-control">
-         <c:forEach var="m" items="${modelos}">
-           <form:option value="${m.id}" 
-             label="${m.descricao} (${m.tipo.descricao}) - ${m.fabricante.descricao}"/>
-         </c:forEach>
-       </form:select>
-        <form:errors path="modelo.id" cssStyle="color: red"/>
-      </div>
-      
-      <div class="form-group">
-        <label for="anoFabricacao">ANO</label>
-        <form:input path="anoFabricacao" class="form-control"/>
-        <form:errors path="anoFabricacao" cssStyle="color: red"/>
-      </div>
-      
-      <div class="form-group">
-        <label for="placa">PLACA</label>
-        <form:input path="placa" class="form-control"/>
-        <form:errors path="placa" cssStyle="color: red"/>
-      </div>
-      
-      <div class="form-group">
-        <label for="cilindradas">CILINDRADAS</label>
-        <form:input path="cilindradas" class="form-control"/>
-        <form:errors path="cilindradas" cssStyle="color: red"/>
-      </div>
-      
-      <div class="form-group">
-        <label for="chassi">CHASSI</label>
-        <form:input path="chassi" class="form-control"/>
-        <form:errors path="chassi" cssStyle="color: red"/>
-      </div>
-      
-      <div class="form-group">
-        <label for="arquivoFoto">FOTO</label>
-        <input type="file" name="arquivoFoto" accept="image/*" class="form-control"/>
-      </div>
-      
-      <form:hidden path="id"/>
-      
       <input type="hidden" name="titulo" value="${titulo}">
-      
-      <div class="form-group">
-        <input type="submit" value="Salvar" class="btn btn-default">
-      </div>
+      <c:import url="campos_edicao.jsp"/>
     </form:form>
   </div>
 </body>
