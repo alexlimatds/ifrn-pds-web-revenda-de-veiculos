@@ -5,6 +5,8 @@ package dominio;
  */
 public class FormaDePagamento extends Entidade {
 	
+	public static final int ID_VEICULO = 3;
+	
 	private String descricao;
 	
 	public FormaDePagamento() {

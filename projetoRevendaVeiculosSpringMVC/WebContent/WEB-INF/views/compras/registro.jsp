@@ -100,19 +100,26 @@
             <form:input path="data" id="txtData" class="form-control"/>
             <form:errors path="data" cssStyle="color: red"/>
           </div>
+          
           <div class="form-group">
             <label for="txtPreco">PREÇO</label>
             <form:input path="preco" id="txtPreco" class="form-control"/>
             <form:errors path="preco" cssStyle="color: red"/>
           </div>
+          
           <div class="form-group">
             <label for="txtObs">OBSERVAÇÕES</label>
             <form:textarea path="obs" id="txtObs" rows="3" class="form-control"/>
             <form:errors path="obs" cssStyle="color: red"/>
           </div>
+          
           <input type="hidden" name="id_veiculo" value="${veiculo.id}">
+          
           <div class="form-group">
-            <input type="submit" value="Salvar" class="btn btn-default">
+            <button type="submit" class="btn btn-default">
+              <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+              Salvar
+            </button>
           </div>
         </form:form>
       </div>
