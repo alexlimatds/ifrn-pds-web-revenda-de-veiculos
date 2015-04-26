@@ -62,8 +62,10 @@ public class RegistrarCompra {
 				return inicio();
 			}
 			else{
-				model.addAttribute("veiculo", veiculo);
-				model.addAttribute("compra", new Compra());
+				//model.addAttribute("veiculo", veiculo);
+				Compra compra = new Compra();
+				compra.setVeiculo(veiculo);
+				model.addAttribute("compra", compra);
 				return "compras/registro";
 			}
 		}
@@ -78,18 +80,14 @@ public class RegistrarCompra {
 		}
 		
 		try{
-			Foto novaFoto = null;
-			if(!arquivoFoto.isEmpty()){
-				byte[] bytes = arquivoFoto.getBytes();
-				String mimeType = arquivoFoto.getContentType();
-				novaFoto = new Foto(bytes, mimeType);
-			}
-			veiculo.setFoto(novaFoto);
+			Foto foto = Util.multipartToFoto(arquivoFoto);
+			veiculo.setFoto(foto);
 			Integer idVeiculo = repositorioVeiculo.inserir(veiculo);
 			veiculo = repositorioVeiculo.getPorId(idVeiculo);
 			model.addAttribute("mensagem", "Veículo cadastrado com sucesso.");
-			model.addAttribute("veiculo", veiculo);
-			model.addAttribute("compra", new Compra());
+			Compra c = new Compra();
+			c.setVeiculo(veiculo);
+			model.addAttribute("compra", c);
 			return "compras/registro";
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -100,10 +98,10 @@ public class RegistrarCompra {
 	
 	@RequestMapping(value="/salvar", method=RequestMethod.POST)
 	public String salvarCompra(@Valid @ModelAttribute("compra") Compra compra, 
-			BindingResult br, @RequestParam("id_veiculo") Integer idVeiculo, 
-			final RedirectAttributes rAttrs, Model model){
+			BindingResult br, final RedirectAttributes rAttrs, Model model){
+		Integer idVeiculo = compra.getVeiculo().getId();
 		if(br.hasErrors()){
-			model.addAttribute("veiculo", repositorioVeiculo.getPorId(idVeiculo));
+			compra.setVeiculo(repositorioVeiculo.getPorId(idVeiculo));
 			return "compras/registro";
 		}
 		
@@ -113,7 +111,6 @@ public class RegistrarCompra {
 			return "redirect:/";
 		}catch(Exception ex){
 			ex.printStackTrace();
-			model.addAttribute("veiculo", repositorioVeiculo.getPorId(idVeiculo));
 			model.addAttribute("erro", true);
 			model.addAttribute("mensagem", "Ocorreu um erro durante a operação.");
 			return "compras/registro";

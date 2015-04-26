@@ -5,7 +5,7 @@ package dominio;
  */
 public class FormaDePagamento extends Entidade {
 	
-	public static final int ID_VEICULO = 3;
+	public static final Integer ID_COM_VEICULO = 3;
 	
 	private String descricao;
 	
@@ -24,5 +24,9 @@ public class FormaDePagamento extends Entidade {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public boolean isComVeiculo() {
+		return ID_COM_VEICULO.equals(getId());
 	}
 }

@@ -22,7 +22,10 @@
         <input type="text" id="placa" name="placa" class="form-control">
       </div>
       <div class="form-group">
-        <input type="submit" value="Continuar" class="btn btn-default">
+        <button type="submit" class="btn btn-default">
+          Continuar
+          <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+        </button>
       </div>
     </form>
   </div>

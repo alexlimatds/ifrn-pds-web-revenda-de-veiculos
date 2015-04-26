@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
@@ -19,7 +18,7 @@ import org.springframework.format.annotation.NumberFormat;
 public class Venda extends Entidade{
 	
 	@NotNull
-	@DateTimeFormat(pattern="ss/MM/yyyy")
+	@DateTimeFormat(pattern="dd/MM/yyyy")
 	private Date data;
 	@NotNull
 	@DecimalMin("0.00")
@@ -33,7 +32,6 @@ public class Venda extends Entidade{
 	private Veiculo veiculo;
 	private Usuario vendedor;
 	private Usuario autorizador;
-	@Size(min=1)
 	private List<PartePagamento> partesPagamento = new ArrayList<PartePagamento>();
 	
 	public Date getData() {
@@ -108,8 +106,20 @@ public class Venda extends Entidade{
 		this.partesPagamento = partesPagamento;
 	}
 
-	public BigDecimal valorTotal(){
-		//TODO
-		return null;
+	public BigDecimal getValorTotal(){
+		BigDecimal total = new BigDecimal("0.00");
+		for(PartePagamento parte : partesPagamento){
+			total = total.add(parte.getQuantia());
+		}
+		return total;
+	}
+	
+	public List<Compra> getComprasEnvolvidas(){
+		ArrayList<Compra> compras = new ArrayList<>();
+		for(PartePagamento p : partesPagamento){
+			if(p.getCompraRelacionada() != null)
+				compras.add(p.getCompraRelacionada());
+		}
+		return compras;
 	}
 }

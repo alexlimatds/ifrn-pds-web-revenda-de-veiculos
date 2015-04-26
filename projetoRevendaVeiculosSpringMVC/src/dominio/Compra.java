@@ -21,6 +21,7 @@ public class Compra extends Entidade {
 	@NumberFormat(pattern="###,###.00")
 	private BigDecimal preco;
 	private String obs;
+	@NotNull
 	private Veiculo veiculo;
 	
 	public Compra() {

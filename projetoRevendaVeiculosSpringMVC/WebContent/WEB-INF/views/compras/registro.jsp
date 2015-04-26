@@ -36,27 +36,27 @@
       <div class="panel-body container-fluid">
         <div class="row">
           <div class="col-md-2">PLACA</div>
-          <div class="col-md-4"><strong>${veiculo.placa}</strong></div>
+          <div class="col-md-4"><strong>${compra.veiculo.placa}</strong></div>
         </div>
         <div class="row">
           <div class="col-md-2">MODELO</div>
           <div class="col-md-4">
             <strong>
-            ${veiculo.modelo.descricao} (${veiculo.modelo.tipo.descricao}) - ${veiculo.modelo.fabricante.descricao}
+            ${compra.veiculo.modelo.descricao} (${compra.veiculo.modelo.tipo.descricao}) - ${compra.veiculo.modelo.fabricante.descricao}
             </strong>
           </div>
         </div>
         <div class="row">
           <div class="col-md-2">ANO</div>
-          <div class="col-md-4"><strong>${veiculo.anoFabricacao}</strong></div>
+          <div class="col-md-4"><strong>${compra.veiculo.anoFabricacao}</strong></div>
         </div>
         <div class="row">
           <div class="col-md-2">CILINDRADAS</div>
-          <div class="col-md-4"><strong>${veiculo.cilindradas}</strong></div>
+          <div class="col-md-4"><strong>${compra.veiculo.cilindradas}</strong></div>
         </div>
         <div class="row">
           <div class="col-md-2">CHASSI</div>
-          <div class="col-md-4"><strong>${veiculo.chassi}</strong></div>
+          <div class="col-md-4"><strong>${compra.veiculo.chassi}</strong></div>
         </div>
         <div class="row">
           <div class="col-md-2">FOTO</div>
@@ -82,7 +82,7 @@
           <div class="modal-content">
             <div class="modal-body">
               <c:url var="urlFoto" value="/veiculos/ajax_foto"/>
-              <img class="img-responsive" src="${urlFoto}?id=${veiculo.id}">
+              <img class="img-responsive" src="${urlFoto}?id=${compra.veiculo.id}">
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@
             <form:errors path="obs" cssStyle="color: red"/>
           </div>
           
-          <input type="hidden" name="id_veiculo" value="${veiculo.id}">
+          <form:hidden path="veiculo.id"  />
           
           <div class="form-group">
             <button type="submit" class="btn btn-default">

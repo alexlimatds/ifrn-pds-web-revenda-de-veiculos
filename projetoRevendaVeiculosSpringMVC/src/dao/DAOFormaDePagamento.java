@@ -40,6 +40,25 @@ public class DAOFormaDePagamento implements RepositorioFormasDePagamento {
 		}
 	}
 	
+	@Override
+	public FormaDePagamento getPagamentoComVeiculo() {
+		try{
+			Connection con = dataSource.getConnection();
+			PreparedStatement prep = con.prepareStatement("select * from FORMAS_PAGAMENTO where ID = ?");
+			prep.setInt(1, FormaDePagamento.ID_COM_VEICULO);
+			ResultSet rs = prep.executeQuery();
+			FormaDePagamento forma = null;
+			while(rs.next()){
+				forma = montarForma(rs);
+			}
+			
+			return forma;
+		}catch(SQLException ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
+	}
+	
 	private FormaDePagamento montarForma(ResultSet rs){
 		try{
 			FormaDePagamento f = new FormaDePagamento();

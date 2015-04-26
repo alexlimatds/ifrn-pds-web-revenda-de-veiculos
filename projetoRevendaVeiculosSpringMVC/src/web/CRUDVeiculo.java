@@ -76,12 +76,7 @@ public class CRUDVeiculo {
 		}
 		
 		try{
-			Foto novaFoto = null;
-			if(!arquivoFoto.isEmpty()){
-				byte[] bytes = arquivoFoto.getBytes();
-				String mimeType = arquivoFoto.getContentType();
-				novaFoto = new Foto(bytes, mimeType);
-			}
+			Foto novaFoto = Util.multipartToFoto(arquivoFoto);
 			if(veiculo.getId() == null){
 				veiculo.setFoto(novaFoto);
 				repositorioVeiculo.inserir(veiculo);
