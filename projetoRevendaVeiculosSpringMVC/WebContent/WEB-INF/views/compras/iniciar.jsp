@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -16,10 +17,14 @@
     </div>
     
     <c:url var="actionUrl" value="/compras/checar_placa"/>
-    <form action="${actionUrl}" method="get" role="form">
+    <form:form action="${actionUrl}" 
+          method="get" 
+          role="form"
+          modelAttribute="placaForm">
       <div class="form-group">
         <label for="placa">PLACA DO VEÍCULO</label>
-        <input type="text" id="placa" name="placa" class="form-control">
+        <form:input path="placa" id="placa" class="form-control"/>
+        <form:errors path="placa" class="text-danger"/>
       </div>
       
       <div class="form-group">
@@ -28,7 +33,7 @@
           <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
         </button>
       </div>
-    </form>
+    </form:form>
   </div>
 </body>
 </html>

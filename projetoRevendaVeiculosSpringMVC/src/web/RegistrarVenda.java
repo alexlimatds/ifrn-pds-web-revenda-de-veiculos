@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,13 +73,19 @@ public class RegistrarVenda {
 	
 	@RequestMapping("/iniciar")
 	public String inicio(Model model){
+		model.addAttribute("placaForm", new PlacaForm());
 		return "vendas/iniciar";
 	}
 	
 	@RequestMapping("/checar_placa")
-	public String checarPlaca(@RequestParam String placa, 
+	public String checarPlaca(@Valid @ModelAttribute("placaForm") PlacaForm placaForm, 
+			BindingResult br,
 			Model model){
-		Veiculo veiculo = repositorioVeiculo.getPorPlaca(placa);
+		if(br.hasErrors()){
+			return "vendas/iniciar";
+		}
+		
+		Veiculo veiculo = repositorioVeiculo.getPorPlaca(placaForm.getPlaca());
 		if(veiculo == null){
 			model.addAttribute("erro", true);
 			model.addAttribute("mensagem", "Veículo não cadastrado.");

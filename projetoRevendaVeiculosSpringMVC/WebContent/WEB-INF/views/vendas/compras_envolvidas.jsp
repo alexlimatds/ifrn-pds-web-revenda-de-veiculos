@@ -63,7 +63,7 @@
                    modelAttribute="placaForm" 
                    cssClass="form-inline">
           <div class="form-group">
-            <label for="placa">PLACA</label>
+            <label for="placa">PLACA DO VEÍCULO</label>
             <form:input path="placa" id="placa" class="form-control"/>
             <form:errors path="placa" class="text-danger"/>
           </div>

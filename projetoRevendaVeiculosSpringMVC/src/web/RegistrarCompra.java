@@ -41,17 +41,23 @@ public class RegistrarCompra {
 	}
 	
 	@RequestMapping("/iniciar")
-	public String inicio(){
+	public String inicio(Model model){
+		model.addAttribute("placaForm", new PlacaForm());
 		return "compras/iniciar";
 	}
 	
 	@RequestMapping("/checar_placa")
-	public String checarPlaca(@RequestParam String placa, 
+	public String checarPlaca(@Valid @ModelAttribute("placaForm") PlacaForm placaForm, 
+			BindingResult br,
 			Model model){
-		Veiculo veiculo = repositorioVeiculo.getPorPlaca(placa);
+		if(br.hasErrors()){
+			return "compras/iniciar";
+		}
+			
+		Veiculo veiculo = repositorioVeiculo.getPorPlaca(placaForm.getPlaca());
 		if(veiculo == null){
 			model.addAttribute("mensagem", "Veículo não cadastrado.");
-			model.addAttribute("veiculo", new Veiculo(null, placa));
+			model.addAttribute("veiculo", new Veiculo(null, placaForm.getPlaca()));
 			model.addAttribute("placaReadonly", true);
 			return "compras/novo_veiculo";
 		}
@@ -59,10 +65,9 @@ public class RegistrarCompra {
 			if(veiculo.getStatus() != StatusVeiculo.NAO_PERTENCE_A_LOJA){
 				model.addAttribute("erro", true);
 				model.addAttribute("mensagem", "O veículo já pertence à loja.");
-				return inicio();
+				return "compras/iniciar";
 			}
 			else{
-				//model.addAttribute("veiculo", veiculo);
 				Compra compra = new Compra();
 				compra.setVeiculo(veiculo);
 				model.addAttribute("compra", compra);
