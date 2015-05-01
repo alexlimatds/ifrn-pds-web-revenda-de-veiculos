@@ -27,7 +27,7 @@
         <form:errors path="placa" class="text-danger"/>
       </div>
       
-      <div class="form-group">
+      <div class="form-group text-right">
         <button type="submit" class="btn btn-default">
           Continuar
           <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>

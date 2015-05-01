@@ -137,11 +137,22 @@
       </div>
     </div><!-- venda -->
     
-    <c:url var="saveUrl" value="/vendas/salvar_venda" />
-    <a class="btn btn-default" href="${saveUrl}" role="button">
-      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-      Salvar venda
-    </a>
+    <div class="row">
+      <div class="col-md-6">
+        <a class="btn btn-default" 
+           href="<c:url value="/vendas/passo_3" />">
+          <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+          Voltar
+        </a>
+      </div>
+      <div class="col-md-6 text-right">
+        <c:url var="saveUrl" value="/vendas/salvar_venda" />
+        <a class="btn btn-default" href="${saveUrl}" role="button">
+          <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+          Salvar venda
+        </a>
+      </div>
+    </div>
     
   </div><!-- container -->
 </body>

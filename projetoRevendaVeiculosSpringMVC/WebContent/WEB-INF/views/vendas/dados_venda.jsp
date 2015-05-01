@@ -157,11 +157,22 @@
           <c:import url="/WEB-INF/views/vendas/pagamentos.jsp"/>
         </div>
         
-        <button type="button" class="btn btn-default" 
-          onclick="$('#formVenda').submit()">
-          Continuar
-          <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-        </button>
+        <div class="row">
+          <div class="col-md-6">
+            <a class="btn btn-default" 
+               href="<c:url value="/vendas/iniciar?placa=${param.placa}" />">
+              <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+              Voltar
+            </a>
+          </div>
+          <div class="col-md-6 text-right">
+            <button type="button" class="btn btn-default" 
+              onclick="$('#formVenda').submit()">
+              Continuar
+              <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

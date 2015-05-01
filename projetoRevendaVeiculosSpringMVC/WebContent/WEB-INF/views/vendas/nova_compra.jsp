@@ -110,6 +110,12 @@
         </div>
       </div> <!-- compra -->
       
+      <a href="<c:url value="/vendas/passo_3" />" 
+         class="btn btn-default" role="button">
+        <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+        Cancelar
+      </a>
+        
       <button type="submit" class="btn btn-default">
         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
         Adicionar veículo

@@ -71,11 +71,36 @@ public class RegistrarVenda {
 		return formasDePagamento.values();
 	}
 	
+	//**** Passos ****
+	
 	@RequestMapping("/iniciar")
-	public String inicio(Model model){
-		model.addAttribute("placaForm", new PlacaForm());
+	public String passo_1(Model model, 
+			@RequestParam(required=false) String placa){
+		PlacaForm form = new PlacaForm();
+		if(placa != null)
+			form.setPlaca(placa);
+		model.addAttribute("placaForm", form);
 		return "vendas/iniciar";
 	}
+	
+	@RequestMapping("/passo_2")
+	public String passo_2(Model model){
+		model.addAttribute("partePagamento", new PartePagamento());
+		return "vendas/dados_venda";
+	}
+	
+	@RequestMapping("/passo_3")
+	public String passo_3(Model model){
+		model.addAttribute("placaForm", new PlacaForm());
+		return "vendas/compras_envolvidas";
+	}
+	
+	@RequestMapping(value="/resumo")
+	public String resumo(){
+		return "vendas/registro";
+	}
+	
+	//**** Operações ****
 	
 	@RequestMapping("/checar_placa")
 	public String checarPlaca(@Valid @ModelAttribute("placaForm") PlacaForm placaForm, 
@@ -97,8 +122,7 @@ public class RegistrarVenda {
 				Venda venda = new Venda();
 				venda.setVeiculo(veiculo);
 				model.addAttribute("venda", venda);
-				model.addAttribute("partePagamento", new PartePagamento());
-				return "vendas/dados_venda";
+				return "forward:/vendas/passo_2";
 			}
 			else if(status == StatusVeiculo.EM_PROCESSO_DE_VENDA){
 				model.addAttribute("erro", true);
@@ -160,8 +184,7 @@ public class RegistrarVenda {
 			return "vendas/dados_venda";
 		}
 		
-		model.addAttribute("placaForm", new PlacaForm());
-		return "vendas/compras_envolvidas";
+		return "forward:/vendas/passo_3";
 	}
 	
 	@RequestMapping(value="/checar_placa_compra", method=RequestMethod.POST)
@@ -215,11 +238,6 @@ public class RegistrarVenda {
 		model.addAttribute("mensagem", "Veículo adicionado com sucesso.");
 		model.addAttribute("placaForm", new PlacaForm());
 		return "vendas/compras_envolvidas";
-	}
-	
-	@RequestMapping(value="/resumo")
-	public String resumo(){
-		return "vendas/registro";
 	}
 	
 	@RequestMapping(value="/salvar_venda")

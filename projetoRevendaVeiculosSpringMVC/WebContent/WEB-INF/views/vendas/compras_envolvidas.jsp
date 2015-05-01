@@ -76,11 +76,22 @@
       </div>
     </div>
     
-    <c:url var="continuarUrl" value="/vendas/resumo"/>
-    <a class="btn btn-default" href="${continuarUrl}" role="button">
-      Continuar
-      <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-    </a>
+    <div class="row">
+      <div class="col-md-6">
+        <a class="btn btn-default" 
+           href="<c:url value="/vendas/passo_2" />">
+          <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+          Voltar
+        </a>
+      </div>
+      <div class="col-md-6 text-right">
+        <c:url var="continuarUrl" value="/vendas/resumo"/>
+        <a class="btn btn-default" href="${continuarUrl}" role="button">
+          Continuar
+          <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+        </a>
+      </div>
+    </div>
   </div> <!-- container -->
 </body>
 </html>
