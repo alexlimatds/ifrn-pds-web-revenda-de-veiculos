@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
  
     <!-- Configura o Spring MVC para considerar as anotações @Controller -->
-    <mvc:annotation-driven />
+    <mvc:annotation-driven conversion-service="conversionService" />
     <context:component-scan base-package="web" />
  	
  	<!-- Configura localização e padrão de nomes das páginas web -->
@@ -25,6 +25,15 @@
 	
     <!-- Permitindo acesso direto do cliente ao conteúdo estático -->
     <mvc:default-servlet-handler/>
+    
+    <bean id="conversionService" 
+    	  class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    	<property name="converters">
+    		<set>
+    			<bean class="web.conversores.ModeloConverter" />
+    		</set>
+    	</property>
+ 	</bean>
     
     <bean id="multipartResolver" 
     	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
