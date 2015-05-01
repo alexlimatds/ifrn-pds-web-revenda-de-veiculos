@@ -1,0 +1,6 @@
+Para exercícios:
+----------------
+-Implementar CDU CRUD Funcionário.
+-Implementar CDU Autorizar Venda.
+-Implementar CDU Finalizar Venda.
+-Na página "Compras envolvidas" do CDU Registrar Venda, implementar a remoção de registros da tabela (usando Ajax).
