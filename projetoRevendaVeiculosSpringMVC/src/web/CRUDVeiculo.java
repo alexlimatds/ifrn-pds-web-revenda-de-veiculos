@@ -45,7 +45,6 @@ public class CRUDVeiculo {
 	
 	@RequestMapping
 	public String inicio(Model model){
-		//model.addAttribute("veiculos", repositorioVeiculo.todos());
 		return "veiculos/inicio";
 	}
 	

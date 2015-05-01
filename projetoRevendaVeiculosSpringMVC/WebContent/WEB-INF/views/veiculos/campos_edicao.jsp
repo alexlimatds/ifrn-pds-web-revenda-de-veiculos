@@ -5,7 +5,7 @@
 
       <div class="form-group">
         <label for="selectModelo">MODELO</label>
-        <form:select path="modelo" 
+        <form:select path="modelo.id" 
                      id="selectModelo" 
                      class="form-control">
          <c:forEach var="m" items="${modelos}">

@@ -13,6 +13,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </head>
 <body>
+  <c:import url="/WEB-INF/views/navegacao.jsp" />
+  
   <div class="container">
     <h2>${titulo}</h2>
     <c:url var="actionUrl" value="/modelos/salvar"/>
@@ -22,6 +24,7 @@
         <form:input path="descricao" class="form-control"/>
         <form:errors path="descricao" cssStyle="color: red"/>
       </div>
+      
       <div class="form-group">
         <label for="fabricante">FABRICANTE</label>
         <form:select path="fabricante.id" 
@@ -31,6 +34,7 @@
                      class="form-control"/>
         <form:errors path="fabricante" cssStyle="color: red"/>
       </div>
+      
       <div class="form-group">
         <label for="tipo">TIPO DE VEÍCULO</label>
         <form:select path="tipo.id" 
@@ -40,10 +44,16 @@
                      class="form-control"/>
         <form:errors path="tipo" cssStyle="color: red"/>
       </div>
+      
       <form:hidden path="id"/>
+      
       <input type="hidden" name="titulo" value="${titulo}">
+      
       <div class="form-group">
-        <input type="submit" value="Salvar" class="btn btn-default">
+        <button type="submit" class="btn btn-default">
+          <span class="glyphicon glyphicon-floppy-disk"></span>
+          Salvar
+        </button>
       </div>
     </form:form>
   </div>
