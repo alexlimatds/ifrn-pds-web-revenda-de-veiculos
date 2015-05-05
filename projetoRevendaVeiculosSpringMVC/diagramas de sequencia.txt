@@ -1,0 +1,173 @@
+Diagramas de sequência para PlantUML
+
+###CRUD Fabricante
+
+#início
+hide footbox
+Actor Navegador
+Navegador -> DispatcherServlet: /fabricantes
+DispatcherServlet -> ":CRUDFabricante": inicio(model)
+":CRUDFabricante" -> ":RepositorioFabricante": lista := todos()
+":CRUDFabricante" -> "model:Model": addAttribute("fabricantes", lista)
+":CRUDFabricante" --> DispatcherServlet: "fabricantes/inicio"
+DispatcherServlet --> Navegador: html
+
+#excluir
+hide footbox
+Actor Navegador
+Navegador -> DispatcherServlet: /fabricantes/excluir
+DispatcherServlet -> ":CRUDFabricante": excluir(id, ...)
+":CRUDFabricante" -> ":RepositorioFabricante": excluir(id)
+":CRUDFabricante" --> DispatcherServlet: "redirect:/fabricantes"
+DispatcherServlet --> Navegador: HTTP redirect
+Navegador -> DispatcherServlet: /fabricantes
+
+#novo fabricante
+hide footbox
+Actor Navegador
+Navegador -> DispatcherServlet: /fabricantes/novo
+DispatcherServlet -> ":CRUDFabricante": novo(model)
+create "f:Fabricante"
+":CRUDFabricante" -> "f:Fabricante": new()
+":CRUDFabricante" -> "model:Model": addAttribute("fabricante",f)
+":CRUDFabricante" -> "model:Model": addAttribute("titulo", "Novo Fabricante")
+":CRUDFabricante" --> DispatcherServlet: "/fabricantes/edicao"
+DispatcherServlet --> Navegador: html
+
+#atualizar fabricante
+hide footbox
+Actor Navegador
+Navegador -> DispatcherServlet: /fabricantes/alterar
+DispatcherServlet -> ":CRUDFabricante": alterar(id, model, ...)
+":CRUDFabricante" -> ":RepositorioFabricante": f := getPorId(id)
+alt f != null
+	":CRUDFabricante" -> "model:Model": addAttribute("fabricante",f)
+	":CRUDFabricante" -> "model:Model": addAttribute("titulo", "Alterar Fabricante")
+	":CRUDFabricante" --> DispatcherServlet: "/fabricantes/edicao"
+	DispatcherServlet --> Navegador: html
+else
+	":CRUDFabricante" --> DispatcherServlet: "redirect:/fabricantes"
+    DispatcherServlet --> Navegador: HTTP redirect
+    Navegador -> DispatcherServlet: /fabricantes
+end
+
+#salvar
+hide footbox
+Actor Navegador
+Navegador -> DispatcherServlet: /fabricantes/salvar
+DispatcherServlet -> ":CRUDFabricante": salvar(f, br, ...)
+note right
+	**f** é uma instância de Fabricante criada pelo Spring MVC 
+	a partir dos campos do formulario. **br** é o objeto que 
+    contém o resultado da validação dos campos.
+endnote
+alt br.hasErrors
+	":CRUDFabricante" --> DispatcherServlet: "/fabricantes/edicao"
+    DispatcherServlet --> Navegador: html
+else
+	alt f.getId() == null
+    	":CRUDFabricante" -> ":RepositorioFabricante": inserir(f)
+    else
+    	":CRUDFabricante" -> ":RepositorioFabricante": atualizar(f)
+    end
+	":CRUDFabricante" --> DispatcherServlet: "redirect:/fabricantes"
+    DispatcherServlet --> Navegador: HTTP redirect
+    Navegador -> DispatcherServlet: /fabricantes
+end
+
+##### Registrar Compra
+#Veiculo.getStatus()
+hide footbox
+[->"v:Veiculo": getStatus()
+"v:Veiculo"->":RepositorioCompra":getUltimaCompraDoVeiculo(v.id)
+"v:Veiculo"->":RepositorioVenda":getUltimaVendaDoVeiculo(v.id)
+[<--"v:Veiculo":status
+
+#Submeter placa
+hide footbox
+Actor Navegador
+Navegador -> DispatcherServlet: /compras/checar_placa
+participant ":RegistrarCompra" as control
+DispatcherServlet -> control: checarPlaca(placaForm, br, model)
+alt br.hasErrors()
+	control --> DispatcherServlet: "compras/iniciar"
+    DispatcherServlet --> Navegador: HTML
+else
+	control -> ":RepositorioVeiculo": v := getPorPlaca(placaForm.getPlaca())
+    alt v == null
+    	control -> "model:Model": addAttribute("veiculo",new Veiculo())
+        control -> DispatcherServlet: "compras/novo_veiculo"
+        DispatcherServlet --> Navegador: HTML
+    else
+    	control -> "v:Veiculo": status := getStatus()
+    	alt status != NÃO PERTENCE À LOJA
+        	control -> DispatcherServlet: "compras/iniciar"
+        	DispatcherServlet --> Navegador: HTML
+        else
+        	create "c:Compra"
+            control -> "c:Compra": new()
+            control -> "c:Compra": setVeiculo(v)
+            control -> "model:Model": addAttribute("compra",c)
+            control -> DispatcherServlet: "compras/registro"
+        	DispatcherServlet --> Navegador: HTML
+        end
+    end
+end
+
+#Cadastro de veículo
+hide footbox
+Actor Navegador
+Navegador -> DispatcherServlet: /compras/salvar_veiculo
+participant ":RegistrarCompra" as control
+DispatcherServlet -> control: salvarVeiculo(v, br, model)
+alt br.hasErrors()
+	control --> DispatcherServlet: "compras/novo_veiculo"
+    DispatcherServlet --> Navegador: HTML
+else
+	control -> ":RepositorioVeiculo": id := inserir(v)
+    control -> ":RepositorioVeiculo": v := getPorId(id)
+    create "c:Compra"
+    control -> "c:Compra": new()
+    control -> "c:Compra": setVeiculo(v)
+    control -> "model:Model": addAttribute("compra",c)
+    control -> DispatcherServlet: "compras/registro"
+    DispatcherServlet --> Navegador: HTML
+end
+
+#registro de compra
+hide footbox
+Actor Navegador
+Navegador -> DispatcherServlet: /compras/salvar
+participant ":RegistrarCompra" as control
+DispatcherServlet -> control: salvarCompra(c, br)
+alt br.hasErrors()
+	control --> DispatcherServlet: "compras/registro"
+    DispatcherServlet --> Navegador: HTML
+else
+	control -> ":ServiceCompra": registrar(c, idVeiculo)
+    
+    alt registro bem-sucedido
+    	control -> DispatcherServlet: "redirect:/"
+    	DispatcherServlet --> Navegador: HTTP redirect
+    	Navegador -> DispatcherServlet: /
+    else ocorrência de exceção VeiculoEmPosseDaLoja
+    	control -> DispatcherServlet: "compras/registro"
+    	DispatcherServlet --> Navegador: HTML
+    end
+end
+
+#ServiceCompra.registrar
+hide footbox
+[->":ServiceCompra": registrar(c,idVeiculo)
+":ServiceCompra"->":RepositorioVeiculo": v := getPorId(idVeiculo)	
+":ServiceCompra" -> "v:Veiculo": status := getStatus()
+alt status == NÃO PERTENCE A LOJA
+	":ServiceCompra" -> "c:Compra": setVeiculo(v)
+    ":ServiceCompra" -> ":RepositorioCompra": idCompra := inserir(c)
+    [<-- ":ServiceCompra": idCompra
+else
+	create "ex:VeiculoEmPosseDaLoja"
+    ":ServiceCompra" -> "ex:VeiculoEmPosseDaLoja": new()
+	[<-- ":ServiceCompra": throw ex
+end
+
