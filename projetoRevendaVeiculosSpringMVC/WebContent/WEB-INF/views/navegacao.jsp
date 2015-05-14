@@ -37,6 +37,19 @@
           </ul>
         </li>
         
+        <li class="dropdown">
+          <a href="#" 
+             class="dropdown-toggle" 
+             data-toggle="dropdown" 
+             role="button" 
+             aria-expanded="false">
+            RELATÓRIOS <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="${context}/relatorios/mais_vendidos">Modelos mais vendidos</a></li>
+          </ul>
+        </li>
+        
         <li>
           <a href="${context}/j_spring_security_logout">SAIR</a>
         </li>        

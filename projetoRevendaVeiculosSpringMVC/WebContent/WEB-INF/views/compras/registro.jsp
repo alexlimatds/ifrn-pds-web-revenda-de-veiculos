@@ -18,7 +18,6 @@
   	  });
     });
   </script>
-  <c:url var="resources" value="/resources"/>
 </head>
 <body>
   <div class="container">

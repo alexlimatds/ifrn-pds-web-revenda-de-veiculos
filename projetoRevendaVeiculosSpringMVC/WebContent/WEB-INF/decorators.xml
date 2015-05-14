@@ -8,6 +8,7 @@
 		<pattern>*/ajax_*</pattern>
 		<pattern>/login.jsp*</pattern>
 	</excludes>
+	
 	<decorator name="principal" page="principal.jsp">
 		<pattern>/*</pattern>
 	</decorator>
