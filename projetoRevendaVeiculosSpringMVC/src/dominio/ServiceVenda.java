@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import dominio.excecoes.VeiculoNaoPertenceALoja;
@@ -31,7 +32,7 @@ public class ServiceVenda {
 		this.repositorioVenda = repositorioVenda;
 	}
 	
-	@Transactional
+	@Transactional(propagation=Propagation.REQUIRED)
 	public Integer registrar(Venda venda){
 		//Verifica as pré-condições
 		if(venda.getPartesPagamento().size() == 0)
@@ -63,7 +64,8 @@ public class ServiceVenda {
 				idVeiculo = repositorioVeiculo.inserir(c.getVeiculo());
 				c.getVeiculo().setId(idVeiculo);
 			}
-			serviceCompra.registrar(c, idVeiculo);
+			Integer idCompra = serviceCompra.registrar(c, idVeiculo);
+			c.setId(idCompra);
 		}
 		Integer idGeradoVenda = repositorioVenda.inserir(venda);
 		

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import dominio.Usuario;
@@ -18,9 +19,13 @@ public class DAOUsuario {
 	@Autowired
 	private DataSource dataSource;
 	
+	private Connection getConnection(){
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
 	public Usuario getPorLogin(String login){
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("select * from USUARIOS where LOGIN=?");
 			prep.setString(1, login);
 			ResultSet rs = prep.executeQuery();

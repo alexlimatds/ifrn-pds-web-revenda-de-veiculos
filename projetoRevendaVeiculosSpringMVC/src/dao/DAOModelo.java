@@ -11,6 +11,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import dominio.Fabricante;
@@ -30,10 +31,14 @@ public class DAOModelo implements RepositorioModelo {
 			"inner join fabricantes f on m.id_fabricante = f.id " +
 			"inner join tipos_veiculo t on m.id_tipo_veiculo = t.id";
 	
+	private Connection getConnection(){
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
 	@Override
 	public Integer inserir(Modelo m) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("insert into MODELOS (DESCRICAO, "
 					+ "ID_FABRICANTE, ID_TIPO_VEICULO) values (?, ?, ?)", 
 					Statement.RETURN_GENERATED_KEYS);
@@ -56,7 +61,7 @@ public class DAOModelo implements RepositorioModelo {
 	@Override
 	public void atualizar(Modelo m) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("update MODELOS set DESCRICAO=?, "
 					+ "ID_FABRICANTE=?, ID_TIPO_VEICULO=? where ID=?");
 			prep.setString(1, m.getDescricao());
@@ -73,7 +78,7 @@ public class DAOModelo implements RepositorioModelo {
 	@Override
 	public void excluir(Integer id) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("delete from MODELOS where ID=?");
 			prep.setInt(1, id);
 			prep.executeUpdate();
@@ -87,7 +92,7 @@ public class DAOModelo implements RepositorioModelo {
 	public List<Modelo> todos() {
 		ArrayList<Modelo> modelos = new ArrayList<Modelo>();
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement(selectQuery);
 			ResultSet rs = prep.executeQuery();
 			while(rs.next()){
@@ -104,7 +109,7 @@ public class DAOModelo implements RepositorioModelo {
 	@Override
 	public Modelo getPorId(Integer id) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement(selectQuery + " where m.id=?");
 			prep.setInt(1, id);
 			ResultSet rs = prep.executeQuery();

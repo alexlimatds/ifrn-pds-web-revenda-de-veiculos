@@ -11,6 +11,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import dominio.RepositorioTipoVeiculo;
@@ -22,10 +23,14 @@ public class DAOTipoVeiculo implements RepositorioTipoVeiculo{
 	@Autowired
 	private DataSource dataSource;
 	
+	private Connection getConnection(){
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
 	@Override
 	public Integer inserir(TipoVeiculo tipo) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("insert into TIPOS_VEICULO (DESCRICAO) "
 					+ "values (?)", Statement.RETURN_GENERATED_KEYS);
 			prep.setString(1, tipo.getDescricao());
@@ -45,7 +50,7 @@ public class DAOTipoVeiculo implements RepositorioTipoVeiculo{
 	@Override
 	public void atualizar(TipoVeiculo tipo) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("update TIPOS_VEICULO set DESCRICAO=? where ID=?");
 			prep.setString(1, tipo.getDescricao());
 			prep.setInt(2, tipo.getId());
@@ -59,7 +64,7 @@ public class DAOTipoVeiculo implements RepositorioTipoVeiculo{
 	@Override
 	public void excluir(Integer idTipoVeiculo) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("delete from TIPOS_VEICULO where ID=?");
 			prep.setInt(1, idTipoVeiculo);
 			prep.executeUpdate();
@@ -72,7 +77,7 @@ public class DAOTipoVeiculo implements RepositorioTipoVeiculo{
 	@Override
 	public List<TipoVeiculo> todos() {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("select * from TIPOS_VEICULO");
 			ResultSet rs = prep.executeQuery();
 			List<TipoVeiculo> tipos = new ArrayList<TipoVeiculo>();
@@ -91,7 +96,7 @@ public class DAOTipoVeiculo implements RepositorioTipoVeiculo{
 	@Override
 	public TipoVeiculo getPorId(Integer id){
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("select * from TIPOS_VEICULO where ID=?");
 			prep.setInt(1, id);
 			ResultSet rs = prep.executeQuery();

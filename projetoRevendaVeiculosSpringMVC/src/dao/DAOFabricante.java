@@ -11,6 +11,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import dominio.Fabricante;
@@ -22,10 +23,14 @@ public class DAOFabricante implements RepositorioFabricante{
 	@Autowired
 	private DataSource dataSource;
 	
+	private Connection getConnection(){
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
 	@Override
 	public Integer inserir(Fabricante f) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("insert into fabricantes (descricao) values (?)", Statement.RETURN_GENERATED_KEYS);
 			prep.setString(1, f.getDescricao());
 			prep.executeUpdate();
@@ -44,7 +49,7 @@ public class DAOFabricante implements RepositorioFabricante{
 	@Override
 	public void atualizar(Fabricante fab) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("update fabricantes set descricao=? where id=?");
 			prep.setString(1, fab.getDescricao());
 			prep.setInt(2, fab.getId());
@@ -58,7 +63,7 @@ public class DAOFabricante implements RepositorioFabricante{
 	@Override
 	public void excluir(Integer idFabricante) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("delete from fabricantes where id=?");
 			prep.setInt(1, idFabricante);
 			prep.executeUpdate();
@@ -71,7 +76,7 @@ public class DAOFabricante implements RepositorioFabricante{
 	@Override
 	public List<Fabricante> todos() {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("select * from fabricantes");
 			ResultSet rs = prep.executeQuery();
 			List<Fabricante> fabricantes = new ArrayList<Fabricante>();
@@ -90,7 +95,7 @@ public class DAOFabricante implements RepositorioFabricante{
 	@Override
 	public Fabricante getPorId(Integer id){
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("select * from fabricantes where id=?");
 			prep.setInt(1, id);
 			ResultSet rs = prep.executeQuery();

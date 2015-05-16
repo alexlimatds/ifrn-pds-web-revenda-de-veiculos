@@ -11,6 +11,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import dominio.RepositorioRelatorios;
@@ -21,11 +22,15 @@ public class DAORelatorios implements RepositorioRelatorios{
 	
 	@Autowired
 	private DataSource dataSource;
-
+	
+	private Connection getConnection(){
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
 	@Override
 	public List<ModeloMaisVendido> modelosMaisVendidos(Date inicio, Date fim) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			String select = "select m.id, m.descricao as modelo, f.descricao as fabricante, "
 					+ "count(ven.id) as quantidade "+
 					"from modelos m inner join fabricantes f on m.id_fabricante=f.id "+

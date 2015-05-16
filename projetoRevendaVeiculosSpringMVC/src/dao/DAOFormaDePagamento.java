@@ -10,6 +10,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import dominio.FormaDePagamento;
@@ -21,10 +22,14 @@ public class DAOFormaDePagamento implements RepositorioFormasDePagamento {
 	@Autowired
 	private DataSource dataSource;
 	
+	private Connection getConnection(){
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
 	@Override
 	public List<FormaDePagamento> todas() {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("select * from FORMAS_PAGAMENTO");
 			ResultSet rs = prep.executeQuery();
 			List<FormaDePagamento> formas = new ArrayList<FormaDePagamento>();
@@ -43,7 +48,7 @@ public class DAOFormaDePagamento implements RepositorioFormasDePagamento {
 	@Override
 	public FormaDePagamento getPagamentoComVeiculo() {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("select * from FORMAS_PAGAMENTO where ID = ?");
 			prep.setInt(1, FormaDePagamento.ID_COM_VEICULO);
 			ResultSet rs = prep.executeQuery();

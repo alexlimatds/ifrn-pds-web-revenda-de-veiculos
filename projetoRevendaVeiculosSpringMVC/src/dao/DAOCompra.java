@@ -1,6 +1,5 @@
 package dao;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,21 +10,29 @@ import java.sql.Timestamp;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import dominio.Compra;
 import dominio.RepositorioCompra;
 
 @Repository
-public class DAOCompra implements RepositorioCompra, Serializable{
+@Transactional(propagation=Propagation.REQUIRED)
+public class DAOCompra implements RepositorioCompra{
 	
 	@Autowired
 	private DataSource dataSource;
-
+	
+	private Connection getConnection(){
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
 	@Override
 	public Integer inserir(Compra c) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("insert into COMPRAS (DATA, PRECO, OBS, ID_VEICULO) " +
 					"values (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			prep.setTimestamp(1, new Timestamp(c.getData().getTime()));
@@ -49,7 +56,7 @@ public class DAOCompra implements RepositorioCompra, Serializable{
 	@Override
 	public void excluir(Integer id) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("delete from COMPRAS where ID=?");
 			prep.setInt(1, id);
 			prep.executeUpdate();
@@ -63,7 +70,7 @@ public class DAOCompra implements RepositorioCompra, Serializable{
 	@Override
 	public Compra getUltimaCompraDoVeiculo(Integer idVeiculo) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			String query = "select * from COMPRAS where ID_VEICULO=? and "
 					+ "DATA=(select max(DATA) from COMPRAS where ID_VEICULO=?)";
 			PreparedStatement prep = con.prepareStatement(query);

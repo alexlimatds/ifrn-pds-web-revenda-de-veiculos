@@ -2,6 +2,8 @@ package dominio;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import dominio.excecoes.VeiculoEmPosseDaLoja;
 
@@ -19,6 +21,7 @@ public class ServiceCompra {
 		this.repositorioVeiculo = repositorioVeiculo;
 	}
 	
+	@Transactional(propagation=Propagation.REQUIRED)
 	public Integer registrar(Compra c, Integer idVeiculo) {
 		//A compra somente pode ser registrada caso o veículo não 
 		//pertença à loja.

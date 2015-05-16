@@ -55,8 +55,10 @@ create table VENDAS (ID int auto_increment, DATA date not null, DESCONTO decimal
 	(ID_AUTORIZADOR) references USUARIOS);
 
 create table PARTES_PAGAMENTO (ID int auto_increment, QUANTIA decimal (14,2) not null, 
-	ID_FORMA_PAGAMENTO int not null, ID_VENDA int not null, primary key (ID), foreign key (ID_VENDA) 
-	references VENDAS, foreign key (ID_FORMA_PAGAMENTO) references FORMAS_PAGAMENTO);
+	ID_FORMA_PAGAMENTO int not null, ID_VENDA int not null, ID_COMPRA int, 
+	primary key (ID), foreign key (ID_VENDA) references VENDAS, 
+	foreign key (ID_FORMA_PAGAMENTO) references FORMAS_PAGAMENTO, 
+	foreign key (ID_COMPRA) references COMPRAS);
 
 --Veículos apenas cadastrados
 insert into VEICULOS (ID, ANO, PLACA, CILINDRADAS, ID_MODELO) values (1, 2010, 'MNT1020', 1000, 5); --Palio
@@ -93,7 +95,7 @@ insert into VENDAS (ID, DATA, DESCONTO, COMISSAO, STATUS, ID_VEICULO, ID_VENDEDO
 insert into VEICULOS (ID, ANO, PLACA, CILINDRADAS, ID_MODELO) values (7, 2008, 'NNM1209', 1600, 3); --Gol
 insert into COMPRAS (ID, DATA, PRECO, ID_VEICULO) values (6, '2013-06-09', 15600.00, 7);
 insert into VENDAS (ID, DATA, DESCONTO, COMISSAO, STATUS, ID_VEICULO, ID_VENDEDOR, ID_AUTORIZADOR) 
-	values (4, '2013-09-25', 0.00, 3.0, 3, 6, 1, 1);
+	values (4, '2013-09-25', 0.00, 3.0, 3, 7, 1, 1);
 insert into PARTES_PAGAMENTO (ID, QUANTIA, ID_FORMA_PAGAMENTO, ID_VENDA) values 
 	(3, 3000.00, 1, 4);
 insert into PARTES_PAGAMENTO (ID, QUANTIA, ID_FORMA_PAGAMENTO, ID_VENDA) values 
@@ -103,6 +105,6 @@ insert into PARTES_PAGAMENTO (ID, QUANTIA, ID_FORMA_PAGAMENTO, ID_VENDA) values
 insert into VEICULOS (ID, ANO, PLACA, CILINDRADAS, ID_MODELO) values (8, 2011, 'XMM9066', 1000, 1); --Corsa
 insert into COMPRAS (ID, DATA, PRECO, ID_VEICULO) values (7, '2013-02-02', 14300.00, 8);
 insert into VENDAS (ID, DATA, DESCONTO, COMISSAO, STATUS, ID_VEICULO, ID_VENDEDOR, ID_AUTORIZADOR) 
-	values (5, '2013-04-17', 0.00, 3.0, 2, 7, 2, 1);
+	values (5, '2013-04-17', 0.00, 3.0, 2, 8, 2, 1);
 insert into PARTES_PAGAMENTO (ID, QUANTIA, ID_FORMA_PAGAMENTO, ID_VENDA) values 
 	(5, 17500.00, 1, 5);

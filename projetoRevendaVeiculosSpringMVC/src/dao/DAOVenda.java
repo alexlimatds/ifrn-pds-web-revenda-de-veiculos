@@ -7,12 +7,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import dominio.PartePagamento;
@@ -21,10 +24,12 @@ import dominio.StatusVenda;
 import dominio.Venda;
 
 @Repository
+@Transactional(propagation=Propagation.REQUIRED)
 public class DAOVenda implements RepositorioVenda{
 	
 	@Autowired
 	private DataSource dataSource;
+	
 	private Map<Integer, StatusVenda> mapaStatus;
 	
 	public DAOVenda() {
@@ -33,10 +38,14 @@ public class DAOVenda implements RepositorioVenda{
 			mapaStatus.put(s.getId(), s);
 	}
 	
+	private Connection getConnection(){
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
 	@Override
 	public Venda getUltimaVendaDoVeiculo(Integer idVeiculo) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			String query = "select * from VENDAS where ID_VEICULO=? and "
 					+ "DATA=(select max(DATA) from VENDAS where ID_VEICULO=?)";
 			PreparedStatement prep = con.prepareStatement(query);
@@ -59,37 +68,12 @@ public class DAOVenda implements RepositorioVenda{
 	public Integer inserir(Venda v) {
 		Connection con = null;
 		try{
-			con = dataSource.getConnection();
-			con.setAutoCommit(false);
-			PreparedStatement prep = con.prepareStatement("insert into VENDAS (DATA, " +
-					"DESCONTO, COMISSAO, STATUS, ID_VEICULO, ID_VENDEDOR) " +
-					"values (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-			prep.setTimestamp(1, new Timestamp(v.getData().getTime()));
-			prep.setBigDecimal(2, v.getDesconto());
-			prep.setBigDecimal(3, v.getComissao());
-			prep.setInt(4, v.getStatus().getId());
-			prep.setInt(5, v.getVeiculo().getId());
-			prep.setInt(6, v.getVendedor().getId());
-			prep.executeUpdate();
-			ResultSet rs = prep.getGeneratedKeys();
-			rs.next();
-			Integer idVendaGerado = rs.getInt(1);
-			rs.close();
-			prep.close();
-			
-			//partes pagamento
-			PreparedStatement prep2 = con.prepareStatement("insert into PARTES_PAGAMENTO "
-					+ "(QUANTIA, ID_FORMA_PAGAMENTO, ID_VENDA) values (?, ?, ?)");
-			for(PartePagamento pgt : v.getPartesPagamento()){
-				prep2.setBigDecimal(1, pgt.getQuantia());
-				prep2.setInt(2, pgt.getFormaPagamento().getId());
-				prep2.setInt(3, idVendaGerado);
-				prep2.executeUpdate();
-			}
-			prep2.close();
-			con.commit();
+			con = getConnection();
+			Integer idVendaGerado = persistirVenda(con, v);
+			persistirPartesPagamento(con, idVendaGerado, v.getPartesPagamento());
 			
 			return idVendaGerado;
+			
 		}catch(SQLException ex){
 			if(con != null){
 				try {
@@ -102,6 +86,44 @@ public class DAOVenda implements RepositorioVenda{
 			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		}
+	}
+	
+	private Integer persistirVenda(Connection con, Venda v) throws SQLException{
+		PreparedStatement prep = con.prepareStatement("insert into VENDAS (DATA, " +
+				"DESCONTO, COMISSAO, STATUS, ID_VEICULO, ID_VENDEDOR) " +
+				"values (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+		prep.setTimestamp(1, new Timestamp(v.getData().getTime()));
+		prep.setBigDecimal(2, v.getDesconto());
+		prep.setBigDecimal(3, v.getComissao());
+		prep.setInt(4, v.getStatus().getId());
+		prep.setInt(5, v.getVeiculo().getId());
+		prep.setInt(6, v.getVendedor().getId());
+		prep.executeUpdate();
+		ResultSet rs = prep.getGeneratedKeys();
+		rs.next();
+		Integer idVendaGerado = rs.getInt(1);
+		rs.close();
+		prep.close();
+		
+		return idVendaGerado;
+	}
+	
+	private void persistirPartesPagamento(Connection con, 
+			Integer idVendaGerado, List<PartePagamento> lista) 
+					throws SQLException{
+		PreparedStatement prep = con.prepareStatement("insert into PARTES_PAGAMENTO "
+				+ "(QUANTIA, ID_FORMA_PAGAMENTO, ID_VENDA, ID_COMPRA) values (?, ?, ?, ?)");
+		for(PartePagamento pgt : lista){
+			prep.setBigDecimal(1, pgt.getQuantia());
+			prep.setInt(2, pgt.getFormaPagamento().getId());
+			prep.setInt(3, idVendaGerado);
+			if(pgt.getCompraRelacionada() != null)
+				prep.setInt(4, pgt.getCompraRelacionada().getId());
+			else
+				prep.setObject(4, null);
+			prep.executeUpdate();
+		}
+		prep.close();
 	}
 	
 	private Venda montarVenda(ResultSet rs) throws SQLException{

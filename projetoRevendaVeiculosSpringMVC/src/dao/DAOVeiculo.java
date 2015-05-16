@@ -14,7 +14,10 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import dominio.Foto;
 import dominio.Modelo;
@@ -24,6 +27,7 @@ import dominio.RepositorioVenda;
 import dominio.Veiculo;
 
 @Repository
+@Transactional(propagation=Propagation.REQUIRED)
 public class DAOVeiculo implements RepositorioVeiculo{
 	
 	@Autowired
@@ -39,10 +43,14 @@ public class DAOVeiculo implements RepositorioVeiculo{
 			"ID_MODELO, MIME_TYPE_FOTO " +
 			"from VEICULOS"; 
 	
+	private Connection getConnection(){
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
 	@Override
 	public Integer inserir(Veiculo v) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("insert into VEICULOS " +
 					"(ANO, PLACA, CILINDRADAS, CHASSI, FOTO, MIME_TYPE_FOTO, ID_MODELO) " +
 					"values (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
@@ -102,7 +110,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	@Override
 	public void excluir(Integer id) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement("delete from VEICULOS where ID=?");
 			prep.setInt(1, id);
 			prep.executeUpdate();
@@ -116,7 +124,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	public List<Veiculo> todos() {
 		ArrayList<Veiculo> veiculos = new ArrayList<Veiculo>();
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement(selectQuery);
 			ResultSet rs = prep.executeQuery();
 			while(rs.next()){
@@ -133,7 +141,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	@Override
 	public Veiculo getPorId(Integer id) {
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement(selectQuery + " where ID=?");
 			prep.setInt(1, id);
 			ResultSet rs = prep.executeQuery();
@@ -151,7 +159,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	
 	public List<Veiculo> getPor(String campo, Object valor){
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			PreparedStatement prep = con.prepareStatement(selectQuery + " where "+ campo +"=?");
 			prep.setObject(1, valor);
 			ResultSet rs = prep.executeQuery();
@@ -179,7 +187,7 @@ public class DAOVeiculo implements RepositorioVeiculo{
 	 */
 	public Foto getFoto(Integer idVeiculo){
 		try{
-			Connection con = dataSource.getConnection();
+			Connection con = getConnection();
 			String select = "select FOTO, MIME_TYPE_FOTO from VEICULOS where ID=?";
 			PreparedStatement prep = con.prepareStatement(select);
 			prep.setObject(1, idVeiculo);
