@@ -2,6 +2,7 @@ package web;
 
 import java.util.Date;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,5 +31,14 @@ public class PeriodoForm {
 
 	public void setFim(Date fim) {
 		this.fim = fim;
+	}
+	
+	@AssertTrue(message="fim deve ser posterior à início")
+	private boolean isValid(){
+		//Ignora quando um dos campos é nulo para que a validação seja 
+		//baseada nas suas anotações @NotNull
+		if(inicio == null || fim == null)
+			return true;
+		return fim.compareTo(inicio) >= 0;
 	}
 }

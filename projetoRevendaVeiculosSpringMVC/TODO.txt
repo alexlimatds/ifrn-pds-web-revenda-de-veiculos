@@ -4,3 +4,5 @@ Para exercícios:
 -Implementar CDU Autorizar Venda.
 -Implementar CDU Finalizar Venda.
 -Na página "Compras envolvidas" do CDU Registrar Venda, implementar a remoção de registros da tabela (usando Ajax).
+-Em ServiceVenda e ServiceVendaTest: impedir que seja registrada uma venda para um veículo com status diferente de DISPONÍVEL PARA A VENDA.
+-Corrigir bug no CRUD Veículo: ao tentar excluir um veículo que possui uma compra associada, a operação gera um erro (comportamento esperado) mas o veículo selecionado é excluído da tabela presente na página. Esta exclusão não deveria ser realizada.  

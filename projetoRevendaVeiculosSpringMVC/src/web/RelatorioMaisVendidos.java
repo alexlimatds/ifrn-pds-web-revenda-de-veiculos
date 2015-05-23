@@ -2,16 +2,15 @@ package web;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import dominio.RepositorioModelo;
 import dominio.RepositorioRelatorios;
@@ -32,24 +31,32 @@ public class RelatorioMaisVendidos {
 		return "relatorios/mais_vendidos/inicio";
 	}
 	
-	@RequestMapping("/ajax_relatorio")
-	public String gerarRelatorio(@Valid @ModelAttribute("periodoForm") PeriodoForm periodo, 
-			BindingResult br, HttpServletResponse response, Model model){
-		String viewName;
-		HttpStatus httpStatus;
+	@RequestMapping("/ajax_validar_form")
+	@ResponseBody
+	public ValidationResponse validarFormulario(@Valid @ModelAttribute("periodoForm") PeriodoForm periodo, 
+			BindingResult br){
+		ValidationResponse vResponse;
 		if(br.hasErrors()){
-			viewName = "relatorios/mais_vendidos/campos";
-			httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+			vResponse = new ValidationResponse(br.getFieldErrors());
 		}
 		else{
-			viewName = "relatorios/mais_vendidos/relatorio";
-			httpStatus = HttpStatus.OK;
-			List<ModeloMaisVendido> registros = repositorioRelatorios.
-					modelosMaisVendidos(periodo.getInicio(), periodo.getFim());
-			model.addAttribute("registros", registros);
+			vResponse = new ValidationResponse();
+			vResponse.setStatus(ValidationResponse.OK);
 		}
 		
-		response.setStatus(httpStatus.value());
-		return viewName;
+		return vResponse;
+	}
+	
+	@RequestMapping("/ajax_get_relatorio")
+	public String getRelatorio(@ModelAttribute("periodoForm") PeriodoForm periodo, 
+			Model model, BindingResult br){
+		if(br.hasErrors())
+			return null;
+		
+		List<ModeloMaisVendido> registros = repositorioRelatorios.
+				modelosMaisVendidos(periodo.getInicio(), periodo.getFim());
+		model.addAttribute("registros", registros);
+		
+		return "relatorios/mais_vendidos/relatorio";
 	}
 }

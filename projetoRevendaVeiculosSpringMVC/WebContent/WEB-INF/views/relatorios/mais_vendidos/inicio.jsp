@@ -6,6 +6,7 @@
 <html lang="pt">
 <head>
   <title>Relatório de modelos mais vendidos</title>
+  <c:url var="baseUrl" value="/relatorios/mais_vendidos"/>
   <c:url var="resources" value="/resources"/>
   <link href="${resources}/js/bootstrap-datepicker.css" rel="stylesheet" />
   <script src="${resources}/js/bootstrap-datepicker.js"></script>
@@ -13,34 +14,50 @@
   <script>
     $(document).ready(function(){
 	  $(document).ajaxError(function(event, jqxhr, settings){
-  		if(jqxhr.status === 422){ //erro de validação nos campos
-  		  $('#meuForm').replaceWith(jqxhr.responseText);
-  		  prepararCampos();
-  		}
-  		else{
-		  atualizarAlert('Aconteceu um erro ao realizar a requisição.', true);
-  		}
+		atualizarAlert('Aconteceu um erro ao realizar a requisição.', true);
   	  });
   	  
-  	  prepararCampos();
-    });
-    
-    function submeter(){
-      var parametros = $('#meuForm').serialize();
-  	  $.get($('#meuForm').attr('action'), parametros, function(data){
-  		$('#divRelatorio').html('<div class="panel-body">' + data + '</div>');
-  	  });
-    }
-    
-    function prepararCampos(){
 	  $('.campoData').datepicker({
         format: "dd/mm/yyyy", 
         language: "pt-BR"
       });
+	  
 	  $('#meuForm').submit(function(event){
-  	    event.preventDefault(); //evita submissão do formulário
-  	    submeter();
+		var $meuForm = $('#meuForm');
+		var parametros = $meuForm.serialize();
+		var url = '${baseUrl}/ajax_validar_form';
+	  	$.get(url, parametros, function(response){
+	  	  $('#divMsg').hide();
+	  	  $meuForm.find('.text-danger').empty();
+	  	  
+	  	  if(response.status == 'FAIL'){
+	  		for (var i = 0; i < response.errorMessageList.length; i++) {
+	  		  var item = response.errorMessageList[i];
+	  		  if(item.fieldName != 'valid'){
+  	  		    var $errorSpan = $('#' + item.fieldName + 'ErrorMsg');
+  	  		    $errorSpan.addClass('text-danger');
+  	  		    $errorSpan.text(item.message);
+	  		  }
+	  		  else{
+	  		    atualizarAlert(item.message, true);
+	  		  }
+	  		}
+	  	  }
+	  	  else{
+	  	    var url2 = '${baseUrl}/ajax_get_relatorio';
+	  	    $.get(url2, parametros, function(html){
+	  	      $('#divRelatorio').html(html);
+	  	    });
+	  	  }
+	  	});
+		
+		event.preventDefault();
+  	    return false;
   	  });
+    });
+    
+    function submeter(){
+      
     }
   </script>
 </head>
@@ -56,7 +73,33 @@
       <p id="pMsg">${mensagem}</p>
     </div>
       
-    <c:import url="campos.jsp" />
+    <form:form action="${baseUrl}/ajax_validar_form" 
+          method="get" 
+          role="form" 
+          modelAttribute="periodoForm" 
+          id="meuForm">
+          
+      <div class="form-group">
+        <label for="inicio">DATA INICIAL</label>
+        <form:input id="inicio" path="inicio" class="form-control campoData"/>
+        <span id="inicioErrorMsg">
+        </span>
+      </div>
+      
+      <div class="form-group">
+        <label for="fim">DATA FINAL</label>
+        <form:input id="fim" path="fim" class="form-control campoData"/>
+        <span id="fimErrorMsg">
+        </span>
+      </div>
+      
+      <div class="form-group">
+        <button type="submit" class="btn btn-default" id="botaoForm">
+          <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+          Gerar relatório
+        </button>
+      </div>
+    </form:form>
     
     <div id="divRelatorio" class="panel panel-default">
     </div>
