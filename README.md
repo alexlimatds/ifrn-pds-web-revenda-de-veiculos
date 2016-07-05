@@ -4,4 +4,4 @@ O sistema é destinado a uma loja fictícia de veículos usados. As principais f
 
 O sistema foi desenvolvido em Java e atualmente estão disponíveis duas implementações, cada uma baseada em um framework web diferente: Play! Framework e Spring.
 
-Mais informações no site do projeto: https://sites.google.com/site/pdswebifrnrevenda/
+Mais informações na Wiki do projeto: https://github.com/alexlimatds/ifrn-pds-web-revenda-de-veiculos/wiki
