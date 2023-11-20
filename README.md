@@ -1,4 +1,4 @@
-# ifrn-pds-web-revenda-de-veiculos
+# Revenda de Veículos
 Projeto exemplo da disciplina Projeto de Desenvolvimento Web do curso de TADS do IFRN, campus Natal Central. Também destina-se como apoio às disciplinas de Programação Web, APOO e Banco de Dados.
 O sistema é destinado a uma loja fictícia de veículos usados. As principais funcionalidades são: registro das transações realizadas; geração de relatórios de apoio.
 
